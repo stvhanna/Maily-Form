@@ -1,6 +1,6 @@
 # Maily Form
 
-This is a self-hosted service you can use to place forms on static sites. It used nodemailer and you can host it with Docker (DockerHub).
+This is a self-hosted service you can use to place forms on static sites. It used nodemailer and you can host it with Docker ([DockerHub](https://hub.docker.com/r/jlelse/maily-form/)).
 
 It is currently in development and it's not advised to use in production yet.
 
