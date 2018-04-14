@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Test-Form</title>
+</head>
+
+<body>
+  <form action="http://localhost:8080" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="_to" value="test@example.com">
+    <input type="hidden" name="_formName" value="Test Form">
+    <input type="hidden" name="_redirectTo" value="https://google.de">
+    <label for="Email">Email</label>
+    <br />
+    <input id="Email" type="email" name="_replyTo" required>
+    <br />
+    <label for="Name">Name</label>
+    <br />
+    <input id="Name" type="text" name="Name" required>
+    <br />
+    <input type="submit" value="Send">
+  </form>
+</body>
+
+</html>

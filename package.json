@@ -1,0 +1,21 @@
+{
+  "name": "maily-form",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "author": "Jan-Lukas Else <mail@jlelse.de> (https://about.jlelse.de/)",
+  "homepage": "https://github.com/lexoyo/email-form-data",
+  "license": "GPL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lexoyo/email-form-data.git"
+  },
+  "dependencies": {
+    "formidable": "1.2.1",
+    "nodemailer": "4.6.4",
+    "nodemailer-markdown": "1.0.2"
+  }
+}
