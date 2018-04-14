@@ -12,7 +12,7 @@ It is currently in development and it's not advised to use in production yet.
 `EMAIL_HOST` (required): The SMTP host  
 `EMAIL_PORT` (required): The SMTP port  
 `EMAIL_SECURE` (required): If the mail should be send on a secure port  
-`FROM` (required): The sender, should be like `Forms <forms@example.com>`  
+`FROM` (required): The sender, should be like `Forms forms@example.com`  
 `TO` (required): Default recipient  
 `ALLOWED_TO` (optional): All allowed recipients
 

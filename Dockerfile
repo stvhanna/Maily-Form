@@ -3,4 +3,4 @@ LABEL maintainer="jlelse (https://about.jlelse.de)"
 COPY . /app
 WORKDIR /app
 RUN npm i
-CMD node .
+CMD ["node", "."]
