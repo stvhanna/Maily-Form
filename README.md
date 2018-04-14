@@ -18,7 +18,7 @@ It is currently in development and it's not advised to use in production yet.
 
 ## Special form fields
 
-`_to`: Recipient, if `ALLOWED_TO` is set, it must be in that list
-`_replyTo`: Email address which should be configured as replyTo
-`_redirectTo`: URL to redirect to
+`_to`: Recipient, if `ALLOWED_TO` is set, it must be in that list  
+`_replyTo`: Email address which should be configured as replyTo  
+`_redirectTo`: URL to redirect to  
 `_formName`: Name of the form
