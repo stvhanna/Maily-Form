@@ -1,17 +1,17 @@
 {
   "name": "maily-form",
   "version": "1.0.0",
-  "description": "",
+  "description": "Forms to Email",
   "main": "index.js",
   "scripts": {
     "start": "node ."
   },
   "author": "Jan-Lukas Else <mail@jlelse.de> (https://about.jlelse.de/)",
-  "homepage": "https://github.com/lexoyo/email-form-data",
-  "license": "GPL",
+  "homepage": "https://github.com/jlelse/Maily-Form",
+  "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lexoyo/email-form-data.git"
+    "url": "https://github.com/jlelse/Maily-Form.git"
   },
   "dependencies": {
     "formidable": "1.2.1",
