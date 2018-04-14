@@ -43,7 +43,6 @@ function processFormFields(req, res) {
     });
     form.on('end', function () {
         if (redirectTo) {
-            console.log(redirectTo);
             res.writeHead(302, {
                 'location': redirectTo
             })
