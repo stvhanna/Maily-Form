@@ -22,3 +22,4 @@ It is currently in development and it's not advised to use in production yet.
 `_replyTo`: Email address which should be configured as replyTo  
 `_redirectTo`: URL to redirect to  
 `_formName`: Name of the form
+`_t_email`: Add this field to your form, but hide it with CSS or JS. If it get's filled, the submission is probably spam and get's rejected.

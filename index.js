@@ -1,4 +1,3 @@
-'use strict';
 var http = require('http');
 var formidable = require("formidable");
 var nodemailer = require('nodemailer');
@@ -31,12 +30,14 @@ function processFormFields(req, res) {
     let replyTo;
     let redirectTo;
     let formName;
+    let botTest = true;
     let form = new formidable.IncomingForm();
     form.on('field', function (field, value) {
         if (field == "_to") to = value;
         else if (field == "_replyTo") replyTo = value;
         else if (field == "_redirectTo") redirectTo = value;
         else if (field == "_formName") formName = value;
+        else if (field == "_t_email") botTest = value == "";
         else {
             text += "  \n**" + field + "**: " + value;
         }
@@ -53,7 +54,12 @@ function processFormFields(req, res) {
             });
             res.write(process.env.MESSAGE || 'Thank you for your submission.');
         }
-        sendMail(text, to, replyTo, formName);
+        if (botTest){
+            sendMail(text, to, replyTo, formName);
+            console.log("Probably no spam.");
+        } else {
+            console.log("Didn't send mail. It's probably spam. From: " + replyTo + " Message: " + text);
+        }
         res.end();
     });
     form.parse(req);
