@@ -18,9 +18,9 @@ console.log("server listening on ", server.address().port);
 // Show message that service is running
 function showServiceRunning(res) {
     res.writeHead(200, {
-        'Content-Type': 'text/plain'
+        'Content-Type': 'text/html'
     });
-    res.write("It works!");
+    res.write("<a href=\"https://github.com/jlelse/Maily-Form\">Maily-Form</a> works!");
     res.end();
 }
 
