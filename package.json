@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "formidable": "1.2.1",
-    "nodemailer": "4.6.4",
+    "nodemailer": "4.6.5",
     "nodemailer-markdown": "1.0.2"
   }
 }
