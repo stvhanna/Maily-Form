@@ -1,5 +1,0 @@
-pipeline:
-  build:
-    image: plugins/docker
-    repo: jlelse/maily-form
-    secrets: [ docker_username, docker_password ]
