@@ -1,8 +1,10 @@
 # Maily Form
 
-This is a self-hosted service you can use to place forms on static sites. It used nodemailer and you can host it with Docker ([DockerHub](https://hub.docker.com/r/jlelse/maily-form/)).
+This is a self-hosted service you can use to place forms on static sites. It uses [nodemailer](https://nodemailer.com/about/) and you can host it with Docker. It is developed by [jlelse](https://about.jlelse.de) mainly for own purposes.
 
-It is currently in development and it's not advised to use in production yet.
+[DockerHub](https://hub.docker.com/r/jlelse/maily-form/)
+
+*It is currently in development and it's not advised to use in production yet.*
 
 ## Parameters
 
@@ -18,8 +20,34 @@ It is currently in development and it's not advised to use in production yet.
 
 ## Special form fields
 
-`_to`: Recipient, if `ALLOWED_TO` is set, it must be in that list  
-`_replyTo`: Email address which should be configured as replyTo  
-`_redirectTo`: URL to redirect to  
-`_formName`: Name of the form
-`_t_email`: Add this field to your form, but hide it with CSS or JS. If it get's filled, the submission is probably spam and get's rejected.
+`_to`: Recipient, if `ALLOWED_TO` is set, it must be in that list, hidden, optional  
+`_replyTo`: Email address which should be configured as replyTo, (most probably not hidden), optional  
+`_redirectTo`: URL to redirect to, hidden, optional  
+`_formName`: Name of the form, hidden, optional  
+`_t_email`: "Honeypot" field, not hidden, advised (see notice below)  
+
+You can find a sample in the `form.html` file.
+
+Notice to the honeypot field: Maily Form offers the option to use a [Honeypot](https://en.wikipedia.org/wiki/Honeypot_(computing)) field, which is basically another input, but it's hidden to the user with either a CSS rule or some JavaScript. It is very likely, that your public form will get the attention of some bots some day and then the spam starts. But bots try to fill every possible input field and will also fill the honeypot field. But Maily Form is really clever and refuses to send mails where the honeypot field is filled. So you should definitely use it.
+
+## Installation
+
+You can simply start a Docker container with the parameters listed above. You can also use `docker-compose`.
+
+Sample part of a compose file for Maily Form:
+
+```
+forms:
+    image: jlelse/maily-form
+    container_name: forms
+    restart: unless-stopped
+    environment:
+        - EMAIL_USER=mail@example.com
+        - EMAIL_PASS=yourSUPERsecretPASSWORD123
+        - EMAIL_HOST=smtp.your-mail-provider.com
+        - EMAIL_PORT=587
+        - EMAIL_SECURE=false
+        - TO=mail@example.com
+        - ALLOWED_TO="mail1@example.com,mail2@example.com"
+        - FROM="Forms forms@example.com"
+```
