@@ -43,7 +43,14 @@ function showAdminUI(res) {
         if (err) res.render('error', { message: err });
         else {
             res.render('admin', { submissions: submissions.map(submission => {
-                return marked(`${new Date(submission.time).toString()}  \n${submission.formName}  \n${submission.replyTo}  \nSpam: ${submission.sent == 1 ? 'No' : 'Yes'}  \n  \n${submission.text}`);
+                return {
+                    id: submission.id,
+                    time: new Date(submission.time).toLocaleString(),
+                    formName: submission.formName,
+                    replyTo: submission.replyTo,
+                    spam: submission.sent == 1 ? 'No' : 'Yes',
+                    text: marked(submission.text)
+                };
             })});
         }
     });

@@ -1,8 +1,31 @@
+doctype html
 html
   head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
     title Admin
-  body
-    p Here you can see all the submissions:
-    ul
-      for submission in submissions
-        li!= submission
+    link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css")
+  body.pt-5
+    main.container(role="main")
+      h1 Admin
+      p Here you can see all the submissions:
+      .table-responsive
+        table.table.table-bordered
+          thead.thead-dark
+            tr
+              th(scope="col") ID
+              th(scope="col") Time
+              th(scope="col") Form Name
+              th(scope="col") Reply-To
+              th(scope="col") Spam
+              th(scope="col") Text
+          tbody
+            for submission in submissions
+              tr
+                th(scope="row")= submission.id
+                td= submission.time
+                td= submission.formName
+                td= submission.replyTo
+                td= submission.spam
+                td!= submission.text
