@@ -20,12 +20,17 @@ html
               th(scope="col") Reply-To
               th(scope="col") Spam
               th(scope="col") Text
+              th(scope="col") Actions
           tbody
             for submission in submissions
               tr
-                th(scope="row")= submission.id
-                td= submission.time
-                td= submission.formName
-                td= submission.replyTo
-                td= submission.spam
-                td!= submission.text
+                th.align-middle(scope="row")= submission.id
+                td.align-middle= submission.time
+                td.align-middle= submission.formName
+                td.align-middle= submission.replyTo
+                td.align-middle= submission.spam
+                td.align-middle!= submission.text
+                td.align-middle
+                  button.btn.btn-danger(type="button",onclick="deleteSubmission('" + submission.id + "')") Delete
+    script(src="https://code.jquery.com/jquery-3.3.1.min.js")
+    script(src="custom.js")

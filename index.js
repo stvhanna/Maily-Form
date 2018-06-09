@@ -12,7 +12,8 @@ createDB();
 // Setup server
 const app = express();
 app.set('view engine', 'pug');
-app.get('/', (req, res, next) => {
+app.use(express.static('public'));
+app.get('/', (req, res) => {
     return showServiceRunning(res);
 });
 if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD){
@@ -23,6 +24,10 @@ if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD){
     });
     app.get('/admin', auth.connect(basic), (req, res) => {
         return showAdminUI(res);
+    });
+    app.delete('/admin/:id', auth.connect(basic), (req, res) => {
+        deleteSubmissionFromDB(req.params.id);
+        return showServiceRunning(res);
     });
 }
 app.post('/', (req, res) => {
@@ -123,6 +128,15 @@ function getSubmissionsFromDB(callback) {
             callback(err, null);
         }
         else callback(null, rows);
+    });
+    db.close();
+}
+
+function deleteSubmissionFromDB(id) {
+    let db = new sqlite.Database('data/submissions.db');
+    db.run('DELETE FROM submissions WHERE id=(?)', [id], (err) => {
+        if (err) console.log(err);
+        else console.log('Entry deleted from DB');
     });
     db.close();
 }
