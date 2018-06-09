@@ -1,10 +1,10 @@
 var http = require('http');
-var formidable = require("formidable");
+var formidable = require('formidable');
 var nodemailer = require('nodemailer');
 var markdown = require('nodemailer-markdown').markdown;
 
 // Setup server
-var server = http.createServer(function (req, res) {
+const server = http.createServer((req, res) => {
     if (req.method.toLowerCase() == 'get') {
         showServiceRunning(res);
     } else if (req.method.toLowerCase() == 'post') {
@@ -32,17 +32,17 @@ function processFormFields(req, res) {
     let formName;
     let botTest = true;
     let form = new formidable.IncomingForm();
-    form.on('field', function (field, value) {
+    form.on('field', (field, value) => {
         if (field == "_to") to = value;
         else if (field == "_replyTo") replyTo = value;
         else if (field == "_redirectTo") redirectTo = value;
         else if (field == "_formName") formName = value;
         else if (field == "_t_email") botTest = value == "";
         else {
-            text += "  \n**" + field + "**: " + value;
+            text += `  \n**${field}**: ${value}`;
         }
     });
-    form.on('end', function () {
+    form.on('end', () => {
         if (redirectTo) {
             res.writeHead(302, {
                 'location': redirectTo
@@ -55,10 +55,10 @@ function processFormFields(req, res) {
             res.write(process.env.MESSAGE || 'Thank you for your submission.');
         }
         if (botTest){
+            console.log("The submission is probably no spam. Sending mail...");
             sendMail(text, to, replyTo, formName);
-            console.log("Probably no spam.");
         } else {
-            console.log("Didn't send mail. It's probably spam. From: " + replyTo + " Message: " + text);
+            console.log(`Didn't send mail. It's probably spam. From: ${replyTo} Message: ${text}`);
         }
         res.end();
     });
@@ -66,7 +66,7 @@ function processFormFields(req, res) {
 }
 
 // Setup nodemailer
-var transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
     secure: process.env.EMAIL_SECURE == "true",
@@ -91,7 +91,7 @@ function sendMail(markdown, to, replyTo, formName) {
         from: process.env.FROM,
         to: to || process.env.TO,
         replyTo: replyTo || process.env.FROM,
-        subject: 'New submission' + (formName ? ' on ' + formName : ''),
+        subject: `New submission${formName ? ` on ${formName}` : ''}`,
         markdown: markdown
     };
     console.log('Sending mail: ', mailOptions);
