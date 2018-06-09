@@ -3,6 +3,7 @@ var auth = require('http-auth');
 var formidable = require('formidable');
 var nodemailer = require('nodemailer');
 var markdown = require('nodemailer-markdown').markdown;
+var marked = require('marked');
 var sqlite = require('sqlite3').verbose();
 
 // Create DB if it doesn't exist
@@ -10,17 +11,20 @@ createDB();
 
 // Setup server
 const app = express();
+app.set('view engine', 'pug');
 app.get('/', (req, res, next) => {
     return showServiceRunning(res);
 });
-const basic = auth.basic({
-    realm: "Maily-Form Administration"
-}, (username, password, callback) => {
-    callback(username === (process.env.ADMIN_USERNAME || "Admin") && password === (process.env.ADMIN_PASSWORD || "reallyinsecure"));
-});
-app.get('/admin', auth.connect(basic), (req, res) => {
-    return showAdminUI(res);
-});
+if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD){
+    const basic = auth.basic({
+        realm: "Maily-Form Administration"
+    }, (username, password, callback) => {
+        callback(username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD);
+    });
+    app.get('/admin', auth.connect(basic), (req, res) => {
+        return showAdminUI(res);
+    });
+}
 app.post('/', (req, res) => {
     return processFormFields(req, res);
 });
@@ -30,20 +34,19 @@ const listener = app.listen(process.env.PORT || 8080, () => {
 
 // Show message that service is running
 function showServiceRunning(res) {
-    res.writeHead(200, {
-        'Content-Type': 'text/html'
-    });
-    res.write("<a href=\"https://github.com/jlelse/Maily-Form\">Maily-Form</a> works!");
-    res.end();
+    res.render('index');
 }
 
 // Show admin UI
 function showAdminUI(res) {
-    res.writeHead(200, {
-        'Content-Type': 'text/html'
+    getSubmissionsFromDB((err, submissions) => {
+        if (err) res.render('error', { message: err });
+        else {
+            res.render('admin', { submissions: submissions.map(submission => {
+                return marked(`${new Date(submission.time).toString()}  \n${submission.formName}  \n${submission.replyTo}  \nSpam: ${submission.sent == 1 ? 'No' : 'Yes'}  \n  \n${submission.text}`);
+            })});
+        }
     });
-    res.write("Fancy Admin!");
-    res.end();
 }
 
 // Process Form Fields
@@ -72,10 +75,7 @@ function processFormFields(req, res) {
             })
         }
         else {
-            res.writeHead(200, {
-                'content-type': 'text/plain'
-            });
-            res.write(process.env.MESSAGE || 'Thank you for your submission.');
+            res.render('success', { message: (process.env.MESSAGE || 'Thank you for your submission.') });
         }
         if (botTest){
             console.log("The submission is probably no spam. Sending mail...");
@@ -103,6 +103,19 @@ function addSubmissionToDB(formName, replyTo, text, sent) {
     db.run('INSERT INTO submissions VALUES (NULL, ?, ?, ?, ?, ?)', [Date.now(), replyTo, formName, text, sent], (err) => {
         if (err) return console.log(err.message);
         console.log('Entry added to DB');
+    });
+    db.close();
+}
+
+function getSubmissionsFromDB(callback) {
+    let db = new sqlite.Database('data/submissions.db');
+    let sql = `SELECT * FROM submissions ORDER BY time DESC`;
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            console.log(err);
+            callback(err, null);
+        }
+        else callback(null, rows);
     });
     db.close();
 }

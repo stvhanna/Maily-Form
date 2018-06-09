@@ -16,7 +16,11 @@ This is a self-hosted service you can use to place forms on static sites. It use
 `EMAIL_SECURE` (required): If the mail should be send on a secure port  
 `FROM` (required): The sender, should be like `Forms forms@example.com`  
 `TO` (required): Default recipient  
-`ALLOWED_TO` (optional): All allowed recipients
+`ALLOWED_TO` (optional): All allowed recipients  
+
+If you want to use the admin panel at `/admin`, you have to set this:
+`ADMIN_USERNAME` (optional): Admin username  
+`ADMIN_PASSWORD` (optional): Admin password
 
 ## Special form fields
 
