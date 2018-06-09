@@ -14,7 +14,9 @@
     "url": "https://github.com/jlelse/Maily-Form.git"
   },
   "dependencies": {
+    "express": "^4.16.3",
     "formidable": "1.2.1",
+    "http-auth": "^3.2.3",
     "nodemailer": "4.6.5",
     "nodemailer-markdown": "1.0.2"
   }

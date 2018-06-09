@@ -1,18 +1,28 @@
-var http = require('http');
+var express = require('express');
+var auth = require('http-auth');
 var formidable = require('formidable');
 var nodemailer = require('nodemailer');
 var markdown = require('nodemailer-markdown').markdown;
 
 // Setup server
-const server = http.createServer((req, res) => {
-    if (req.method.toLowerCase() == 'get') {
-        showServiceRunning(res);
-    } else if (req.method.toLowerCase() == 'post') {
-        processFormFields(req, res);
-    }
+var app = express();
+app.get('/', (req, res, next) => {
+    return showServiceRunning(res);
 });
-server.listen(process.env.PORT || 8080);
-console.log("server listening on ", server.address().port);
+var basic = auth.basic({
+    realm: "Maily-Form Administration"
+}, (username, password, callback) => {
+    callback(username === (process.env.ADMIN_USERNAME || "Admin") && password === (process.env.ADMIN_PASSWORD || "reallyinsecure"));
+});
+app.get('/admin', auth.connect(basic), (req, res) => {
+    return showAdminUI(res);
+});
+app.post('/', (req, res) => {
+    return processFormFields(req, res);
+});
+var listener = app.listen(process.env.PORT || 8080, () => {
+    console.log("server listening on ", listener.address().port);
+});
 
 // Show message that service is running
 function showServiceRunning(res) {
@@ -20,6 +30,15 @@ function showServiceRunning(res) {
         'Content-Type': 'text/html'
     });
     res.write("<a href=\"https://github.com/jlelse/Maily-Form\">Maily-Form</a> works!");
+    res.end();
+}
+
+// Show admin UI
+function showAdminUI(res) {
+    res.writeHead(200, {
+        'Content-Type': 'text/html'
+    });
+    res.write("Fancy Admin!");
     res.end();
 }
 
