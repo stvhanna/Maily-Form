@@ -107,7 +107,7 @@ function createDB() {
 
 function addSubmissionToDB(formName, replyTo, text, sent) {
     let db = new sqlite.Database('data/submissions.db');
-    db.run('INSERT INTO submissions VALUES (NULL, ?, ?, ?, ?, ?)', [Date.now(), replyTo, formName, text, sent], (err) => {
+    db.run('INSERT INTO submissions VALUES (NULL, ?, ?, ?, ?, ?)', [Date.now(), formName, replyTo, text, sent], (err) => {
         if (err) return console.log(err.message);
         console.log('Entry added to DB');
     });
