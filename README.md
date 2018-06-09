@@ -17,8 +17,8 @@ This is a self-hosted service you can use to place forms on static sites. It use
 `FROM` (required): The sender, should be like `Forms forms@example.com`  
 `TO` (required): Default recipient  
 `ALLOWED_TO` (optional): All allowed recipients  
-
-If you want to use the admin panel at `/admin`, you have to set this:
+  
+If you want to use the admin panel at `/admin`, you have to set this too:  
 `ADMIN_USERNAME` (optional): Admin username  
 `ADMIN_PASSWORD` (optional): Admin password
 
