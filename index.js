@@ -3,13 +3,17 @@ var auth = require('http-auth');
 var formidable = require('formidable');
 var nodemailer = require('nodemailer');
 var markdown = require('nodemailer-markdown').markdown;
+var sqlite = require('sqlite3').verbose();
+
+// Create DB if it doesn't exist
+createDB();
 
 // Setup server
-var app = express();
+const app = express();
 app.get('/', (req, res, next) => {
     return showServiceRunning(res);
 });
-var basic = auth.basic({
+const basic = auth.basic({
     realm: "Maily-Form Administration"
 }, (username, password, callback) => {
     callback(username === (process.env.ADMIN_USERNAME || "Admin") && password === (process.env.ADMIN_PASSWORD || "reallyinsecure"));
@@ -20,7 +24,7 @@ app.get('/admin', auth.connect(basic), (req, res) => {
 app.post('/', (req, res) => {
     return processFormFields(req, res);
 });
-var listener = app.listen(process.env.PORT || 8080, () => {
+const listener = app.listen(process.env.PORT || 8080, () => {
     console.log("server listening on ", listener.address().port);
 });
 
@@ -79,9 +83,28 @@ function processFormFields(req, res) {
         } else {
             console.log(`Didn't send mail. It's probably spam. From: ${replyTo} Message: ${text}`);
         }
+        addSubmissionToDB(formName, replyTo, text, botTest ? 1 : 2);
         res.end();
     });
     form.parse(req);
+}
+
+function createDB() {
+    let db = new sqlite.Database('data/submissions.db');
+    db.run('CREATE TABLE IF NOT EXISTS submissions (id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, formName TEXT, replyTo TEXT, text TEXT, sent INTEGER)', (err) => {
+        if (err) return console.log(err.message);
+        console.log('Database initialized');
+    });
+    db.close();
+}
+
+function addSubmissionToDB(formName, replyTo, text, sent) {
+    let db = new sqlite.Database('data/submissions.db');
+    db.run('INSERT INTO submissions VALUES (NULL, ?, ?, ?, ?, ?)', [Date.now(), replyTo, formName, text, sent], (err) => {
+        if (err) return console.log(err.message);
+        console.log('Entry added to DB');
+    });
+    db.close();
 }
 
 // Setup nodemailer
