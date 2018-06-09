@@ -58,7 +58,7 @@ function showAdminUI(res) {
 
 // Process Form Fields
 function processFormFields(req, res) {
-    let text = "**New submission:**  \n";
+    let text = "";
     let to = process.env.TO;
     let replyTo;
     let redirectTo;
@@ -72,7 +72,7 @@ function processFormFields(req, res) {
         else if (field == "_formName") formName = value;
         else if (field == "_t_email") botTest = value == "";
         else {
-            text += `  \n**${field}**: ${value}`;
+            text += `**${field}**: ${value}  \n`;
         }
     });
     form.on('end', () => {
@@ -154,7 +154,7 @@ function sendMail(markdown, to, replyTo, formName) {
         to: to || process.env.TO,
         replyTo: replyTo || process.env.FROM,
         subject: `New submission${formName ? ` on ${formName}` : ''}`,
-        markdown: markdown
+        markdown: `**New submission:**  \n  \n${markdown}`
     };
     console.log('Sending mail: ', mailOptions);
     // Send mail
