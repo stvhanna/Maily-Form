@@ -2,7 +2,6 @@ node_modules
 .dockerignore
 Dockerfile
 form.html
-package-lock.json
 README.md
 LICENSE
 .gitignore
