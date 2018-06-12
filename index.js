@@ -1,10 +1,10 @@
-var express = require('express');
-var auth = require('http-auth');
-var formidable = require('formidable');
-var nodemailer = require('nodemailer');
-var markdown = require('nodemailer-markdown').markdown;
-var marked = require('marked');
-var sqlite = require('sqlite3').verbose();
+const express = require('express');
+const auth = require('http-auth');
+const formidable = require('formidable');
+const nodemailer = require('nodemailer');
+const markdown = require('nodemailer-markdown').markdown;
+const marked = require('marked');
+const sqlite = require('sqlite3').verbose();
 
 // Create DB if it doesn't exist
 createDB();
@@ -27,7 +27,7 @@ if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD){
     });
     app.delete('/admin/:id', auth.connect(basic), (req, res) => {
         deleteSubmissionFromDB(req.params.id);
-        return showServiceRunning(res);
+        return returnResult(res);
     });
 }
 app.post('/', (req, res) => {
@@ -40,6 +40,11 @@ const listener = app.listen(process.env.PORT || 8080, () => {
 // Show message that service is running
 function showServiceRunning(res) {
     res.render('index');
+}
+
+// Return result
+function returnResult(res) {
+    res.json({result: "success"});
 }
 
 // Show admin UI
