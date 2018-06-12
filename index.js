@@ -16,7 +16,7 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
     return showServiceRunning(res);
 });
-if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD){
+if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
     const basic = auth.basic({
         realm: "Maily-Form Administration"
     }, (username, password, callback) => {
@@ -50,18 +50,20 @@ function returnResult(res) {
 // Show admin UI
 function showAdminUI(res) {
     getSubmissionsFromDB((err, submissions) => {
-        if (err) res.render('error', { message: err });
+        if (err) res.render('error', {message: err});
         else {
-            res.render('admin', { submissions: submissions.map(submission => {
-                return {
-                    id: submission.id,
-                    time: new Date(submission.time).toLocaleString(),
-                    formName: submission.formName,
-                    replyTo: submission.replyTo,
-                    spam: submission.sent == 1 ? 'No' : 'Yes',
-                    text: marked(submission.text)
-                };
-            })});
+            res.render('admin', {
+                submissions: submissions.map(submission => {
+                    return {
+                        id: submission.id,
+                        time: new Date(submission.time).toLocaleString(),
+                        formName: submission.formName,
+                        replyTo: submission.replyTo,
+                        spam: submission.sent === 1 ? 'No' : 'Yes',
+                        text: marked(submission.text)
+                    };
+                })
+            });
         }
     });
 }
@@ -76,11 +78,11 @@ function processFormFields(req, res) {
     let botTest = true;
     let form = new formidable.IncomingForm();
     form.on('field', (field, value) => {
-        if (field == "_to") to = value;
-        else if (field == "_replyTo") replyTo = value;
-        else if (field == "_redirectTo") redirectTo = value;
-        else if (field == "_formName") formName = value;
-        else if (field == "_t_email") botTest = value == "";
+        if (field === "_to") to = value;
+        else if (field === "_replyTo") replyTo = value;
+        else if (field === "_redirectTo") redirectTo = value;
+        else if (field === "_formName") formName = value;
+        else if (field === "_t_email") botTest = value === "";
         else {
             text += `**${field}**: ${value}  \n`;
         }
@@ -92,9 +94,9 @@ function processFormFields(req, res) {
             })
         }
         else {
-            res.render('success', { message: (process.env.MESSAGE || 'Thank you for your submission.') });
+            res.render('success', {message: (process.env.MESSAGE || 'Thank you for your submission.')});
         }
-        if (botTest){
+        if (botTest) {
             console.log("The submission is probably no spam. Sending mail...");
             sendMail(text, to, replyTo, formName);
         } else {
@@ -150,7 +152,7 @@ function deleteSubmissionFromDB(id) {
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
-    secure: process.env.EMAIL_SECURE == "true",
+    secure: process.env.EMAIL_SECURE === "true",
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
