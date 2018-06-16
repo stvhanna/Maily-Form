@@ -23,7 +23,10 @@ if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
         callback(username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD);
     });
     app.get('/admin', auth.connect(basic), (req, res) => {
-        return showAdminUI(res);
+        return showAdminUI(1, res);
+    });
+    app.get('/admin/spam', auth.connect(basic), (req, res) => {
+        return showAdminUI(2, res);
     });
     app.delete('/admin/:id', auth.connect(basic), (req, res) => {
         deleteSubmissionFromDB(req.params.id);
@@ -48,19 +51,19 @@ function returnResult(res) {
 }
 
 // Show admin UI
-function showAdminUI(res) {
-    getSubmissionsFromDB((err, submissions) => {
+function showAdminUI(sent, res) {
+    getSubmissionsFromDB(sent, (err, submissions) => {
         if (err) res.render('error', {message: err});
         else {
             res.render('admin', {
+                message: marked(sent === 2 ? '**Spam submissions** ([All](/admin)):' : '**All submissions** ([Spam](/admin/spam)):'),
                 submissions: submissions.map(submission => {
                     return {
                         id: submission.id,
                         time: new Date(submission.time).toLocaleString(),
                         formName: submission.formName,
                         replyTo: submission.replyTo,
-                        spam: submission.sent === 1 ? 'No' : 'Yes',
-                        text: marked(submission.text)
+                        text: marked(submission.text).replace(/\n*$/, "")
                     };
                 })
             });
@@ -126,9 +129,10 @@ function addSubmissionToDB(formName, replyTo, text, sent) {
     db.close();
 }
 
-function getSubmissionsFromDB(callback) {
+function getSubmissionsFromDB(sent, callback) {
     let db = new sqlite.Database('data/submissions.db');
     let sql = `SELECT * FROM submissions ORDER BY time DESC`;
+    if (sent) sql = `SELECT * FROM submissions WHERE sent = ${sent} ORDER BY time DESC`;
     db.all(sql, [], (err, rows) => {
         if (err) {
             console.log(err);

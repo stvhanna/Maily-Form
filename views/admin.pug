@@ -9,7 +9,7 @@ html
   body.pt-5
     main.container(role="main")
       h1 Admin
-      p Here you can see all the submissions:
+      p!= message
       .table-responsive
         table.table.table-bordered
           thead.thead-dark
@@ -18,7 +18,6 @@ html
               th(scope="col") Time
               th(scope="col") Form Name
               th(scope="col") Reply-To
-              th(scope="col") Spam
               th(scope="col") Text
               th(scope="col") Actions
           tbody
@@ -28,9 +27,8 @@ html
                 td.align-middle= submission.time
                 td.align-middle= submission.formName
                 td.align-middle= submission.replyTo
-                td.align-middle= submission.spam
                 td.align-middle!= submission.text
                 td.align-middle
                   button.btn.btn-danger(type="button",onclick="deleteSubmission('" + submission.id + "')") Delete
     script(src="https://code.jquery.com/jquery-3.3.1.min.js")
-    script(src="custom.js")
+    script(src="/custom.js")
