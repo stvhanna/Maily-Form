@@ -7,7 +7,7 @@ const config = require('../lib/config');
 const db = require('../lib/database').connect();
 
 /* eslint-disable-next-line new-cap */
-var router = express.Router();
+const router = express.Router();
 
 const basic = auth.basic({
     realm: config.adminRealm
@@ -18,11 +18,11 @@ const basic = auth.basic({
     callback(authSuccess);
 });
 
-router.get('/admin', auth.connect(basic), (req, res) => showAdminUI(1, res));
+router.get('/', auth.connect(basic), (req, res) => showAdminUI(1, res));
 
-router.get('/admin/spam', auth.connect(basic), (req, res) => showAdminUI(2, res));
+router.get('/spam', auth.connect(basic), (req, res) => showAdminUI(2, res));
 
-router.delete('/admin/:id', auth.connect(basic), (req, res) => {
+router.delete('/:id', auth.connect(basic), (req, res) => {
     deleteSubmissionFromDB(req.params.id);
 
     return returnResult(res);

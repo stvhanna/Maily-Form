@@ -2,6 +2,7 @@
 const path = require('path');
 const cors = require('cors');
 const express = require('express');
+const errorHandler = require('express-error-handler');
 
 const rootDir = path.join(__dirname, '..');
 const adminRouter = require(path.join(rootDir, '/app/routes/admin'));
@@ -15,13 +16,13 @@ const app = express();
 // Configure server
 app.set('view engine', 'pug');
 app.set('views', path.join(rootDir, '/app/views'));
-app.use(cors({origin: config.accessControlAllowOrigin }));
+app.use(cors({origin: config.corsHeader }));
 app.use(express.static(path.join(rootDir, '/public')));
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  app.use(errorHandler({ dumpExceptions: true, showStack: true }));
 } else if (process.env.NODE_ENV === 'production') {
-  app.use(express.errorHandler());
+  app.use(errorHandler());
 }
 
 // Attach routes

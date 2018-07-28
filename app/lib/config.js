@@ -17,11 +17,10 @@ if (process.env.NODE_ENV === 'production') {
         smtpUser: process.env.SMTP_USER || process.env.EMAIL_USER || null,
         smtpPass: process.env.SMTP_PASS || process.env.EMAIL_PASS || null,
         smtpSsl: process.env.SMTP_SSL || process.env.EMAIL_SECURE || false,
-        smtpAuth: process.env.SMTP_AUTH || (this.smtpUser && this.smtpPass) || false,
 
         // Header content for emails
-        emailFrom: process.env.EMAIL_FROM || 'noreply@example.com',
-        emailTo: process.env.EMAIL_TO || 'noone@example.com',
+        emailFrom: process.env.EMAIL_FROM || process.env.FROM || 'noreply@example.com',
+        emailTo: process.env.EMAIL_TO || process.env.TO || 'noone@example.com',
 
         // Text content for success and error messages
         messageSuccess: process.env.MESSAGE_SUCCESS || 'Thank you for your submission.',
@@ -60,7 +59,6 @@ if (process.env.NODE_ENV === 'production') {
         smtpUser: null,
         smtpPass: null,
         smtpSsl: false,
-        smtpAuth: false,
 
         // Header content for emails
         emailFrom: 'noreply@example.com',

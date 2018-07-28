@@ -8,7 +8,7 @@ const transporterConfig = {
     host: config.smtpHost,
     port: config.smtpPort,
     secure: (config.smtpSsl === "true"),
-    auth: (config.smtpAuth === "true" ? {
+    auth: (config.smtpUser && config.smtpPass ? {
         user: config.smtpUser,
         pass: config.smtpPass
     } : false),

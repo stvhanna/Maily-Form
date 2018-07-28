@@ -5,7 +5,7 @@ const db = require('../lib/database').connect();
 const config = require('../lib/config');
 
 /* eslint-disable-next-line new-cap */
-var router = express.Router();
+const router = express.Router();
 
 router.post('/', (req, res) => processFormFields(req, res));
 
