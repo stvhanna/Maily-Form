@@ -23,7 +23,6 @@ To run the server, you must set a few environment variables from the list below.
 | **`SMTP_HOST`** | required |       - | The SMTP host                          |
 | **`SMTP_PORT`** | required |       - | The SMTP port                          |
 | **`SMTP_SSL`**  | optional | `false` | If the SMTP server uses encryption     |
-| **`SMTP_AUTH`** | optional | `false` | If the SMTP server uses authentication |
 
 ### Parameters that control email headers
 
