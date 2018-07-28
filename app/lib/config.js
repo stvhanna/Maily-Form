@@ -1,5 +1,6 @@
 
-var config;
+let config;
+
 if (process.env.NODE_ENV === 'production') {
     // In production : read config from the environment or use default values
     config = {
@@ -39,7 +40,7 @@ if (process.env.NODE_ENV === 'production') {
         corsHeader: process.env.CORS_HEADER || '*',
 
         // Server
-        host: process.env.HOST || '127.0.0.1',
+        host: process.env.HOST || '0.0.0.0',
         port: process.env.PORT || 8080
     }
 } else {
