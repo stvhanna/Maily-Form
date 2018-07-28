@@ -1,6 +1,6 @@
-FROM mhart/alpine-node:9
+FROM mhart/alpine-node:10
 LABEL maintainer="jlelse (https://about.jlelse.de)"
 COPY . /app
 WORKDIR /app
-RUN npm i
+RUN npm install
 CMD ["npm", "start"]
