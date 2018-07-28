@@ -5,17 +5,17 @@ const express = require('express');
 const errorHandler = require('express-error-handler');
 
 const rootDir = path.join(__dirname, '..');
-const adminRouter = require(path.join(rootDir, '/app/routes/admin'));
-const formsRouter = require(path.join(rootDir, '/app/routes/forms'));
-const rootRouter = require(path.join(rootDir, '/app/routes/root'));
-const config = require(path.join(rootDir, '/app/lib/config'));
+const adminRouter = require(path.join(rootDir, 'app/routes/admin'));
+const formsRouter = require(path.join(rootDir, 'app/routes/forms'));
+const rootRouter = require(path.join(rootDir, 'app/routes/root'));
+const config = require(path.join(rootDir, 'app/lib/config'));
 
 // Setup server
 const app = express();
 
 // Configure server
 app.set('view engine', 'pug');
-app.set('views', path.join(rootDir, '/app/views'));
+app.set('views', path.join(rootDir, 'app/views'));
 app.use(cors({origin: config.corsHeader }));
 app.use(express.static(path.join(rootDir, '/public')));
 
