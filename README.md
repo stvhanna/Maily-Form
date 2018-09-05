@@ -88,8 +88,9 @@ services:
             - SMTP_AUTH=true
             - EMAIL_TO=mail@example.com
             - EMAIL_FROM="Forms forms@example.com"
-            - ALLOWED_TO="mail1@example.com,mail2@example.com"
+            - ALLOWED_TO=mail1@example.com mail2@example.com
             - CORS_HEADER="example.com"
+            - HOST=0.0.0.0
 ```
 
 ## Authors 
