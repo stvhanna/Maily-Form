@@ -51,7 +51,7 @@ describe('Forms API', () => {
             });
         });
 
-        it('sends email and set properly the _replyTo header (when set)', (done) => {
+        it('sends email and takes _replyTo in account in mail header (when set)', (done) => {
             let formData = {
                 "_replyTo": 'loveIsAll@example.com'
             };
@@ -147,6 +147,10 @@ describe('Forms API', () => {
             });
         });
         */
+
+        it.skip('sanitizes HTML in message and other fields', (done) => {
+            // TODO
+        });
 
         it('blocks email when _t_email is not empty', (done) => {
             let formData = {

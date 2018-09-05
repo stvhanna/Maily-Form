@@ -1,7 +1,7 @@
 
 # Maily Form
 
-![Docker Pulls](https://img.shields.io/docker/pulls/jlelse/maily-form.svg)
+![Travis](https://travis-ci.org/jlelse/Maily-Form.svg?branch=master) ![Docker Pulls](https://img.shields.io/docker/pulls/jlelse/maily-form.svg)
 
 *Available on [DockerHub](https://hub.docker.com/r/jlelse/maily-form/)*
 
@@ -23,6 +23,7 @@ To run the server, you must set a few environment variables from the list below.
 | **`SMTP_HOST`** | required |       - | The SMTP host                          |
 | **`SMTP_PORT`** | required |       - | The SMTP port                          |
 | **`SMTP_SSL`**  | optional | `false` | If the SMTP server uses encryption     |
+| **`SMTP_AUTH`** | optional | `false` | If the SMTP server uses authentication |
 
 ### Parameters that control email headers
 
@@ -47,20 +48,19 @@ If you want to use the admin panel at `/admin`, you have to set this too:
 
 | Name          | Type     | Default value | Usage                           |
 |--------------------|----------|-------------------------------|----------------|
-| **`ADMIN_USERNAME`** | optional |                             - | Admin username |
-| **`ADMIN_PASSWORD`** | optional |                             - | Admin password |
+| **`ADMIN_USER`** | optional |                             - | Admin username |
+| **`ADMIN_PASS`** | optional |                             - | Admin password |
 | **`ADMIN_REALM`**    | optional | `"Maily-Form Administration"` | Admin realm    |
-
 
 ## Special form fields
 
-| Name          | Type     | Default value | Usage                           |
-|------------------|----------|---|----------------|
+| Name              | Type     | Default value | Usage                           |
+|-------------------|----------|---|----------------|
 | **`_to`**         | optional | - | Recipient, if `ALLOWED_TO` is set, it must be in that list, hidden |
 | **`_replyTo`**    | optional | - | Email address which should be configured as replyTo, (most probably not hidden)  |
 | **`_redirectTo`** | optional | - | URL to redirect to, hidden |
 | **`_formName`**   | optional | - | Name of the form, hidden  |
-| **`_t_email`**   | optional | - | "Honeypot" field, not hidden, advised (see notice below)  |
+| **`_t_email`**    | optional | - | "Honeypot" field, not hidden, advised (see notice below)  |
 
 You can find a sample in the `form.html` file.
 
