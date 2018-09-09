@@ -1,6 +1,11 @@
-cache:
-  directories:
-    - node_modules
+sudo: required
+
+services:
+  - docker
+
+env:
+  global:
+    - IMAGE_NAME=jlelse/maily-form
 
 language: node_js
 node_js:
@@ -9,9 +14,16 @@ node_js:
   - "9"
   - "8"
 
-env: 
-  - NODE_ENV=test
-
-script: 
+script:
   - npm test
 
+before_deploy:
+  - docker --version
+  - docker build -t "$IMAGE_NAME" .
+  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+
+deploy:
+  provider: script
+  script: docker push "${IMAGE_NAME}:latest"
+  on:
+    branch: master
