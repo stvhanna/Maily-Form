@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin</title>
+    <link rel="stylesheet" href="../bootstrap.min.css">
+</head>
+<body class="pt-5">
+<main class="container" role="main"><h1>Admin</h1>
+    <p>
+    <p><strong>Spam submissions</strong> (<a href="../../admin">All</a>):</p>
+    </p>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Time</th>
+                <th scope="col">Form Name</th>
+                <th scope="col">Reply-To</th>
+                <th scope="col">Text</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody id="tablebody">
+            </tbody>
+        </table>
+    </div>
+</main>
+<script src="../jquery-3.3.1.min.js"></script>
+<script src="../custom.js"></script>
+<script>
+    getSubmissions("spam");
+</script>
+</body>
+</html>

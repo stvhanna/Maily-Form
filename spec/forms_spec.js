@@ -190,7 +190,7 @@ describe('Forms API', () => {
                         (_error, _response, body) => {
                             // console.log(error);
                             // console.log(body);
-                            assert.include(body, 'Success');
+                            assert.include(body, 'success');
                         }
                     );
                 },

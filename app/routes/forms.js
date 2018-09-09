@@ -1,7 +1,8 @@
 const express = require('express');
 const formidable = require('formidable');
 const transporter = require('../lib/transporter');
-const db = require('../lib/database').connect();
+const db = require('../lib/database').
+    connect();
 const config = require('../lib/config');
 const sanitizeHtml = require('sanitize-html');
 
@@ -42,19 +43,11 @@ function processFormFields(req, res) {
 
     form.on('end', () => {
         if (redirectTo) {
-            res.writeHead(302, { 'location': redirectTo });
-        } else {
-            if (config.responseFormat === 'json') {
-                res.set('Content-Type', 'application/json');
-                res.send({ status: 'success' });
-            } else if (config.responseFormat === 'html') {
-                res.set('Content-Type', 'text/html');
-                res.render('success', { message: config.subjectSuccess });
-            } else {
-                // undefined format
-            }
+            res.writeHead(302, {'location': redirectTo});
+        } else if (config.responseFormat === 'json') {
+            res.set('Content-Type', 'application/json');
+            res.send({status: 'success'});
         }
-
         if (botTest) {
             console.log("The submission is probably no spam. Sending mail...");
             sendMail(text, to, replyTo, formName);

@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === 'production') {
         // Allowed recipients
         allowedTo: process.env.ALLOWED_TO || false,
 
-        // Response format (accepts 'json' or 'html')
+        // Response format (accepts 'json')
         responseFormat: process.env.RESPONSE_FORMAT || 'json',
 
         // Security (or lack-of)
@@ -77,9 +77,9 @@ if (process.env.NODE_ENV === 'production') {
         // Allowed recipients
         allowedTo: false,
 
-        // Response format (accepts 'json' or 'html')
-        responseFormat: 'html',
-       
+        // Response format (accepts 'json')
+        responseFormat: 'json',
+
         // Security (or lack-of)
         corsHeader: '*',
 
