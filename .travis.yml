@@ -20,7 +20,7 @@ script:
 before_deploy:
   - docker --version
   - docker build -t "$IMAGE_NAME" .
-  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+  - echo "$REGISTRY_PASS" | docker login -u "$REGISTRY_USER" --password-stdin
 
 deploy:
   provider: script
