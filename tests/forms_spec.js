@@ -13,8 +13,8 @@ const it = mocha.it;
 
 const withSmtpServer = require('./lib/with_smtp_server');
 
-const app = require('../app/server');
-var port, server, url;
+const app = require('../app/index').jlelse.maily.Server.app;
+let port, server, url;
 
 beforeEach((done) => {
     // create listener with random port & store port when ready

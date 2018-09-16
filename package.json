@@ -2,14 +2,13 @@
   "name": "maily-form",
   "version": "1.0.0",
   "description": "Forms to Email",
-  "main": "index.js",
+  "main": "app/index.js",
   "scripts": {
-    "start": "NODE_ENV=production node bin/www",
-    "watch": "NODE_ENV=development && nodemon -w app bin/www",
-    "test": "NODE_ENV=test mocha --reporter spec spec/**/*_spec.js",
-    "watch-spec": "NODE_ENV=test mocha --watch --recursive --reporter spec spec/**/*_spec.js"
+    "build": "./gradlew build",
+    "start": "NODE_ENV=production node app/index.js",
+    "test": "NODE_ENV=test mocha --exit tests/**/*_spec.js"
   },
-  "author": "Jan-Lukas Else <mail@jlelse.de> (https://about.jlelse.de/)",
+  "author": "Jan-Lukas Else (https://about.jlelse.de/)",
   "homepage": "https://github.com/jlelse/Maily-Form",
   "license": "GPL-3.0",
   "repository": {
@@ -22,19 +21,19 @@
     "express": "4.16.3",
     "formidable": "1.2.1",
     "http-auth": "3.2.3",
-    "marked": "0.4.0",
-    "nodemailer": "4.6.7",
+    "kotlin": "1.2.70",
+    "marked": "0.5.0",
+    "nodemailer": "4.6.8",
     "nodemailer-markdown": "1.0.2",
-    "sanitize-html": "1.18.5",
+    "sanitize-html": "1.19.0",
     "sqlite3": "4.0.2"
   },
   "devDependencies": {
     "chai": "4.1.2",
-    "eslint": "5.2.0",
     "mailparser-mit": "0.6.2",
     "mocha": "5.2.0",
-    "nodemon": "1.18.3",
-    "request": "2.87.0",
-    "smtp-server": "3.4.6"
+    "nodemon": "1.18.4",
+    "request": "2.88.0",
+    "smtp-server": "3.4.7"
   }
 }

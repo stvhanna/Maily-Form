@@ -1,5 +1,5 @@
 
-const config = require('../../app/lib/config');
+const config = require('../../app/index').jlelse.maily.lib.Config;
 const SMTPServer = require('smtp-server').SMTPServer;
 const MailParser = require('mailparser-mit').MailParser;
 

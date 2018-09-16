@@ -1,9 +1,7 @@
-
 const chai = require('chai');
 const mocha = require('mocha');
 const request = require('request');
 
-/* eslint-disable-next-line no-unused-vars */
 const assert = chai.assert;
 const expect = chai.expect;
 
@@ -12,8 +10,8 @@ const beforeEach = mocha.beforeEach;
 const afterEach = mocha.afterEach;
 const it = mocha.it;
 
-const app = require('../app/server');
-var port, server, url;
+const app = require('../app/index').jlelse.maily.Server.app;
+let port, server, url;
 
 beforeEach((done) => {
     // create listener with random port & store port when ready
@@ -28,11 +26,23 @@ afterEach((done) => {
     server.close(done);
 });
 
-describe('Admin pages', () => {
-    describe('GET /', () => {
-        it.skip('display messages', (done) => {
-            // FIXME: fill test
-            done();
-        });
-    });
+describe('Root API', () => {
+	describe('GET /', () => {
+
+		it('returns HTTP status code 200', (done) => {
+			request(url, (error, response, _body) => {
+				expect(response.statusCode).to.equal(200);
+				done();
+			});
+		});
+
+		it('returns HTML content', (done) => {
+			request(url, (error, response, body) => {
+				expect(body).to.include('Maily-Form');
+				expect(body).to.include('works');
+				done();
+			});
+		});
+	});
 });
+

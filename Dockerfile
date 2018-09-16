@@ -5,11 +5,11 @@
 FROM node:10-alpine as build
 COPY . /app
 WORKDIR /app
-RUN apk add --update sqlite-libs sqlite-dev \
-        python build-base \
-    && rm -rf /var/cache/apk/*
-
+RUN apk add --update sqlite-libs sqlite-dev python build-base openjdk8 && rm -rf /var/cache/apk/*
 RUN npm install
+RUN npm run build
+RUN npm test
+RUN rm -rf .gradle build src tests
 
 #
 # STAGE 2
@@ -20,9 +20,7 @@ LABEL maintainer="Jan-Lukas Else (https://about.jlelse.de)"
 
 COPY --from=build /app /app
 WORKDIR /app
-
-RUN apk add --update sqlite-libs \
-    && rm -rf /var/cache/apk/*
+RUN apk add --update sqlite-libs && rm -rf /var/cache/apk/*
 
 EXPOSE 8080
 CMD ["npm", "start"]

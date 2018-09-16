@@ -7,16 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin</title>
     <link rel="stylesheet" href="bootstrap.min.css">
-    <script src="vue.min.js"></script>
+    <script src="vue.js"></script>
     <script src="axios.min.js"></script>
 </head>
 
 <body class="pt-5">
-    <main class="container" role="main">
+    <jlelse.maily.main class="container" role="jlelse.maily.main">
         <div id="app">
             <h1>Admin ({{ selector }})</h1>
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-success" @click="selector='all'">Sent</button>
+                <button type="button" class="btn btn-success" @click="selector='sent'">Sent</button>
                 <button type="button" class="btn btn-danger" @click="selector='spam'">Spam</button>
             </div>
             <br>
@@ -46,12 +46,12 @@
                 </tbody>
             </table>
         </div>
-    </main>
+    </jlelse.maily.main>
     <script>
         const app = new Vue({
             el: '#app',
             data: {
-                selector: "all",
+                selector: "sent",
                 submissions: []
             },
             methods: {
