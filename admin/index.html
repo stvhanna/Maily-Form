@@ -1,38 +1,84 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin</title>
     <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="vue.js"></script>
+    <script src="axios.min.js"></script>
 </head>
+
 <body class="pt-5">
-<main class="container" role="main"><h1>Admin</h1>
-    <p>
-    <p><strong>All submissions</strong> (<a href="spam">Spam</a>):</p>
-    </p>
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead class="thead-dark">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Time</th>
-                <th scope="col">Form Name</th>
-                <th scope="col">Reply-To</th>
-                <th scope="col">Text</th>
-                <th scope="col">Actions</th>
-            </tr>
-            </thead>
-            <tbody id="tablebody">
-            </tbody>
-        </table>
-    </div>
-</main>
-<script src="jquery-3.3.1.min.js"></script>
-<script src="custom.js"></script>
-<script>
-    getSubmissions("all");
-</script>
+    <main class="container" role="main">
+        <div id="app">
+            <h1>Admin ({{ selector }})</h1>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-success" @click="selector='sent'">Sent</button>
+                <button type="button" class="btn btn-danger" @click="selector='spam'">Spam</button>
+            </div>
+            <br>
+            <br>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Form Name</th>
+                        <th scope="col">Reply-To</th>
+                        <th scope="col">Text</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="submission in submissions">
+                        <th class="align-middle" scope="row">{{ submission.id }}</th>
+                        <td class="align-middle">{{ submission.time }}</td>
+                        <td class="align-middle">{{ submission.formName }}</td>
+                        <td class="align-middle">{{ submission.replyTo }}</td>
+                        <td class="align-middle" v-html="submission.text"></td>
+                        <td class="align-middle">
+                            <button class="btn btn-danger" type="button" @click="deleteSubmission(submission.id)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                selector: "sent",
+                submissions: []
+            },
+            methods: {
+                deleteSubmission: deleteSubmission
+            },
+            watch: {
+                selector: function (val) {
+                    getSubmissions(val)
+                }
+            },
+            mounted() {
+                getSubmissions(this.selector);
+            }
+        });
+
+        function deleteSubmission(id) {
+            axios
+                .delete(`/api/${id}`)
+                .then(_ => getSubmissions(app.selector))
+        }
+
+        function getSubmissions(selector) {
+            axios
+                .get(`/api/${selector}`)
+                .then(response => (app.submissions = response.data.result.submissions))
+        }
+    </script>
 </body>
+
 </html>

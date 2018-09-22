@@ -1,10 +1,6 @@
-
-const chai = require('chai');
+const assert = require('chai').assert;
 const mocha = require('mocha');
 const request = require('request');
-
-const assert = chai.assert;
-// const expect = chai.expect;
 
 const describe = mocha.describe;
 const beforeEach = mocha.beforeEach;
@@ -13,11 +9,10 @@ const it = mocha.it;
 
 const withSmtpServer = require('./lib/with_smtp_server');
 
-const app = require('../app/server');
-var port, server, url;
+const app = require('../app/index').jlelse.maily.Server.app;
+let port, server, url;
 
 beforeEach((done) => {
-    // create listener with random port & store port when ready
     server = app.listen(0, () => {
         port = server.address().port;
         url = `http://localhost:${port}/`;
@@ -33,18 +28,15 @@ describe('Forms API', () => {
     describe('POST /', () => {
         it('sends email and returns HTTP status code 200', (done) => {
             let formData = {};
-
             withSmtpServer({
-                onListen: (_server) => {
+                onListen: () => {
                     request.post(
                         { url, formData },
-                        (_error, response, _body) => {
-                            // console.log(error);
-                            assert.strictEqual(response.statusCode, 200);
+                        (_error, response) => {
+                            assert.equal(response.statusCode, 200);
                         }
                     );
                 },
-
                 onClose: () => {
                     done();
                 }
@@ -56,28 +48,16 @@ describe('Forms API', () => {
                 "_replyTo": 'loveIsAll@example.com'
             };
             let messageCounter = 0;
-
             withSmtpServer({
                 onMessage: (mailObject) => {
                     messageCounter += 1;
-                    assert.strictEqual(
-                        mailObject.headers['reply-to'],
-                        /* eslint-disable-next-line no-underscore-dangle */
-                        formData._replyTo
-                    );
+                    assert.equal(mailObject.headers['reply-to'], formData._replyTo);
                 },
-
                 onListen: () => {
-                    request.post(
-                        { url, formData },
-                        (_error, _response, _body) => {
-                            // do nothing
-                        }
-                    );
+                    request.post({ url, formData });
                 },
-
                 onClose: () => {
-                    assert.strictEqual(messageCounter, 1);
+                    assert.equal(messageCounter, 1);
                     done();
                 }
             });
@@ -90,22 +70,15 @@ describe('Forms API', () => {
             let messageCounter = 0;
 
             withSmtpServer({
-                onMessage: (_mailObject) => { messageCounter += 1; },
-
+                onMessage: () => { messageCounter += 1; },
                 onListen: () => {
                     request.post(
                         { url, formData },
-                        (_error, response, _body) => {
-                            // Final location must be _redirectTo value
-                            assert.strictEqual(
-                                response.headers.location,
-                                /* eslint-disable-next-line no-underscore-dangle */
-                                formData._redirectTo
-                            );
+                        (_error, response) => {
+                            assert.equal(response.headers.location, formData._redirectTo);
                         }
                     );
                 },
-
                 onClose: () => {
                     assert.strictEqual(messageCounter, 1);
                     done();
@@ -114,7 +87,6 @@ describe('Forms API', () => {
 
         });
 
-        /*
         it('send email with formName in title (when set)', (done) => {
             let formData = {
                 "_formName": 'loveIsAll'
@@ -124,52 +96,50 @@ describe('Forms API', () => {
             withSmtpServer({
                 onMessage: (mailObject) => {
                     messageCounter += 1;
-                    assert.include(
-                        mailObject.subject,
-                        // eslint-disable-next-line no-underscore-dangle
-                        formData._formName
-                    );
+                    assert.include(mailObject.subject, formData._formName);
                 },
-
                 onListen: () => {
-                    request.post(
-                        { url, formData },
-                        (_error, _response, _body) => {
-                            // do nothing
-                        }
-                    );
+                    request.post({ url, formData });
                 },
-
                 onClose: () => {
                     assert.strictEqual(messageCounter, 1);
                     done();
                 }
             });
         });
-        */
 
-        it.skip('sanitizes HTML in message and other fields', (done) => {
-            // TODO
+        it('sanitizes HTML in message and other fields', (done) => {
+            let formData = {
+                "message": "html<script>console.log('test')</script>"
+            };
+            let messageCounter = 0;
+
+            withSmtpServer({
+                onMessage: (mailObject) => {
+                    messageCounter += 1;
+                    assert.notInclude(mailObject.html, 'script');
+                    assert.notInclude(mailObject.text, 'script');
+                },
+                onListen: () => {
+                    request.post({ url, formData });
+                },
+                onClose: () => {
+                    assert.equal(messageCounter, 1);
+                    done();
+                }
+            });
         });
 
         it('blocks email when _t_email is not empty', (done) => {
             let formData = {
                 "_t_email": 'iAmABot'
             };
-
             let messageCounter = 0;
             withSmtpServer({
-                onMessage: (_mailObject) => { messageCounter += 1; },
-
+                onMessage: () => { messageCounter += 1; },
                 onListen: () => {
-                    request.post(
-                        { url, formData },
-                        (_error, _response, _body) => {
-                            // do nothing
-                        }
-                    );
+                    request.post({ url, formData });
                 },
-
                 onClose: () => {
                     assert.strictEqual(messageCounter, 0);
                     done();
@@ -182,19 +152,15 @@ describe('Forms API', () => {
             let messageCounter = 0;
 
             withSmtpServer({
-                onMessage: (_mailObject) => { messageCounter += 1; },
-
+                onMessage: () => { messageCounter += 1; },
                 onListen: () => {
                     request.post(
                         { url, formData },
                         (_error, _response, body) => {
-                            // console.log(error);
-                            // console.log(body);
                             assert.include(body, 'success');
                         }
                     );
                 },
-
                 onClose: () => {
                     assert.strictEqual(messageCounter, 1);
                     done();

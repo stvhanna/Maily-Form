@@ -7,19 +7,11 @@ env:
   global:
     - IMAGE_NAME=jlelse/maily-form
 
-language: node_js
-node_js:
-  - "node"
-  - "10"
-  - "9"
-  - "8"
-
 script:
-  - npm test
-
-before_deploy:
   - docker --version
   - docker build -t "$IMAGE_NAME" .
+
+before_deploy:
   - echo "$REGISTRY_PASS" | docker login -u "$REGISTRY_USER" --password-stdin
 
 deploy:
