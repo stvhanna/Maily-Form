@@ -51,10 +51,7 @@ object Forms {
             }
             res.end()
             if (botTest) {
-                console.log("The submission is probably no spam. Sending mail...")
                 sendMail(markdown = text, to = to, replyTo = replyTo, formName = formName)
-            } else {
-                console.log("Didn't send mail. It's probably spam. From: $replyTo Message: $text")
             }
             addSubmissionToDB(formName, replyTo, text, if (botTest) 1 else 2)
         }
@@ -64,7 +61,6 @@ object Forms {
     private fun addSubmissionToDB(formName: String?, replyTo: String?, text: String?, sent: Int) {
         db.run("INSERT INTO submissions VALUES (NULL, ?, ?, ?, ?, ?)", arrayOf(Date.now(), formName, replyTo, text, sent)) { err ->
             if (err != null) console.log(err as Any)
-            else console.log("Entry added to DB")
         }
     }
 
@@ -87,15 +83,10 @@ object Forms {
                 "subject" to "New submission${if (!formName.isNullOrBlank()) "on $formName" else ""}",
                 "markdown" to "**New submission:**  \n  \n$markdown"
         )
-        console.log("Sending mail: ", mailOptions)
 
         // Send mail
-        transporter.sendMail(mailOptions) { error, info ->
-            if (error != null) {
-                console.log(error as Any)
-            } else {
-                console.log("Mail ${info.messageId} sent: ${info.response}")
-            }
+        transporter.sendMail(mailOptions) { error, _ ->
+            if (error != null) console.log(error as Any)
         }
     }
 

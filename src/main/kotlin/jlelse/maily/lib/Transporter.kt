@@ -24,7 +24,6 @@ object Transporter {
     val transporter: dynamic = nodemailer.createTransport(transporterConfig)
 
     init {
-        console.log(transporterConfig)
         transporter.use("compile", markdown())
     }
 }

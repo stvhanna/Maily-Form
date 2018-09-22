@@ -1,9 +1,6 @@
-const chai = require('chai');
+const assert = require('chai').assert;
 const mocha = require('mocha');
 const request = require('request');
-
-const assert = chai.assert;
-const expect = chai.expect;
 
 const describe = mocha.describe;
 const beforeEach = mocha.beforeEach;
@@ -14,7 +11,6 @@ const app = require('../app/index').jlelse.maily.Server.app;
 let port, server, url;
 
 beforeEach((done) => {
-    // create listener with random port & store port when ready
     server = app.listen(0, () => {
         port = server.address().port;
         url = `http://localhost:${port}/`;
@@ -26,20 +22,20 @@ afterEach((done) => {
     server.close(done);
 });
 
-describe('Root API', () => {
+describe('Front page', () => {
 	describe('GET /', () => {
 
 		it('returns HTTP status code 200', (done) => {
-			request(url, (error, response, _body) => {
-				expect(response.statusCode).to.equal(200);
+			request(url, (error, response) => {
+				assert.equal(response.statusCode, 200);
 				done();
 			});
 		});
 
 		it('returns HTML content', (done) => {
 			request(url, (error, response, body) => {
-				expect(body).to.include('Maily-Form');
-				expect(body).to.include('works');
+			    assert.include(body, 'Maily-Form');
+			    assert.include(body, 'works');
 				done();
 			});
 		});

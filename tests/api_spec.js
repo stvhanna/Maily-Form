@@ -8,14 +8,21 @@ const afterEach = mocha.afterEach;
 const it = mocha.it;
 
 const app = require('../app/index').jlelse.maily.Server.app;
-let port, server, url, authorizedOptions;
+let port, server, url, authorizedOptions, spamOptions;
 
 beforeEach((done) => {
     server = app.listen(0, () => {
         port = server.address().port;
-        url = `http://localhost:${port}/admin/`;
+        url = `http://localhost:${port}/api/sent`;
         authorizedOptions = {
             url: url,
+            auth: {
+                user: 'admin',
+                pass: 'admin'
+            }
+        };
+        spamOptions = {
+            url: `http://localhost:${port}/api/spam`,
             auth: {
                 user: 'admin',
                 pass: 'admin'
@@ -29,8 +36,8 @@ afterEach((done) => {
     server.close(done);
 });
 
-describe('Admin pages', () => {
-    describe('GET /', () => {
+describe('API', () => {
+    describe('GET /sent', () => {
 
         it('returns HTTP status code 401 when not authorized', (done) => {
             request(url, (error, response) => {
@@ -46,9 +53,19 @@ describe('Admin pages', () => {
             });
         });
 
-        it('returns HTML content', (done) => {
+        it('returns JSON content', (done) => {
             request(authorizedOptions, (error, response, body) => {
-                assert.include(body, 'vue');
+                assert.include(body, 'success');
+                done();
+            });
+        });
+    });
+
+    describe('GET /spam', () => {
+
+        it('returns JSON content', (done) => {
+            request(spamOptions, (error, response, body) => {
+                assert.include(body, 'success');
                 done();
             });
         });
