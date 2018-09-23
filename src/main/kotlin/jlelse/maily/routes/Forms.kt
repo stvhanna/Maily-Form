@@ -40,7 +40,7 @@ object Forms {
                 "_redirectTo" -> redirectTo = saniValue
                 "_formName" -> formName = saniValue
                 "_t_email" -> botTest = saniValue == ""
-                else -> text += "**$saniField**: $saniValue \n"
+                else -> text += "**$saniField**: $saniValue  \n"
             }
         }
         form.on("end") {
