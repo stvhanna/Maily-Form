@@ -66,19 +66,18 @@ object Forms {
 
     private fun sendMail(markdown: String, to: String?, replyTo: String?, formName: String?) {
         // Check if recipient is allowed
-        var finalto = to
-        if (Config.allowedTo != null) {
-            val allowedToArray = Config.allowedTo?.split(" ")
-            if (allowedToArray?.contains(to) != true) {
+        val allowed = Config.allowedTo
+        val finalTo = if (to?.isBlank() == false && allowed?.isBlank() == false) {
+            if (!allowed.split(" ").contains(to)) {
                 console.log("Tried to send to $to, but that isn't allowed. Sending to ${Config.emailTo} instead.")
-                finalto = Config.emailTo
-            }
-        }
+                Config.emailTo
+            } else to
+        } else Config.emailTo
 
         // Setup mail
         val mailOptions = json(
                 "from" to Config.emailFrom,
-                "to" to (finalto ?: Config.emailTo),
+                "to" to finalTo,
                 "replyTo" to (replyTo ?: Config.emailFrom),
                 "subject" to "New submission${if (!formName.isNullOrBlank()) "on $formName" else ""}",
                 "markdown" to "**New submission:**  \n  \n$markdown"
