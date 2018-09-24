@@ -79,7 +79,7 @@ object Forms {
                 "from" to Config.emailFrom,
                 "to" to finalTo,
                 "replyTo" to (replyTo ?: Config.emailFrom),
-                "subject" to "New submission${if (!formName.isNullOrBlank()) "on $formName" else ""}",
+                "subject" to "New submission${if (!formName.isNullOrBlank()) " on $formName" else ""}",
                 "markdown" to "**New submission:**  \n  \n$markdown"
         )
 
