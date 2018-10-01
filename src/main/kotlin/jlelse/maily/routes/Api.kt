@@ -1,5 +1,6 @@
 package jlelse.maily.routes
 
+import jlelse.maily.lib.Config
 import jlelse.maily.lib.Database
 import jlelse.maily.require
 import kotlin.js.Date
@@ -13,6 +14,9 @@ object Api {
     val router: dynamic = express.Router()
 
     init {
+        router.get("/info") { _, res ->
+            info(res)
+        }
         router.get("/sent") { _, res ->
             get(1, res)
         }
@@ -27,7 +31,16 @@ object Api {
         }
     }
 
-    fun get(sent: Int, res: dynamic) {
+    private fun info(res: dynamic) {
+        res.json(json(
+                "success" to true,
+                "result" to json(
+                        "title" to Config.adminRealm
+                )
+        ))
+    }
+
+    private fun get(sent: Int, res: dynamic) {
         getSubmissionsFromDB(sent) { err, submissions ->
             if (err != null || submissions == null) {
                 if (err != null) console.log(err as Any)
@@ -50,7 +63,7 @@ object Api {
         }
     }
 
-    fun getId(id: Int, res: dynamic) {
+    private fun getId(id: Int, res: dynamic) {
         getSubmissionFromDB(id) { err, submission ->
             if (err != null || submission == null) {
                 if (err != null) console.log(err as Any)

@@ -16,7 +16,7 @@
         <section class="hero">
             <div class="hero-body">
                 <div class="container">
-                    <h1 class="title">Admin</h1>
+                    <h1 class="title">{{ info.title }}</h1>
                     <h2 class="subtitle">Manage submissions</h2>
                 </div>
             </div>
@@ -62,6 +62,7 @@
         const app = new Vue({
             el: '#app',
             data: {
+                info: {},
                 selector: "sent",
                 submissions: []
             },
@@ -74,9 +75,18 @@
                 }
             },
             mounted() {
-                getSubmissions(this.selector);
+                getInfo()
+                getSubmissions(this.selector)
             }
         });
+
+        function getInfo() {
+            axios.get(`/api/info`).
+                then(response => {
+                    app.info = response.data.result
+                    document.title = app.info.title
+                })
+        }
 
         function deleteSubmission(id) {
             axios.delete(`/api/${id}`).
