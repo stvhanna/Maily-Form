@@ -44,7 +44,7 @@
                         <tbody>
                             <tr v-for="submission in submissions">
                                 <th scope="row">{{ submission.id }}</th>
-                                <td>{{ submission.time }}</td>
+                                <td v-bind:title="submission.time">{{ new Date(submission.time).toLocaleString() }}</td>
                                 <td>{{ submission.formName }}</td>
                                 <td>{{ submission.replyTo }}</td>
                                 <td v-html="submission.text"></td>
