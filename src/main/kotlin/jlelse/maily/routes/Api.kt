@@ -23,11 +23,20 @@ object Api {
         router.get("/spam") { _, res ->
             get(2, res)
         }
+        router.get("/archive") { _, res ->
+            get(10, res, ">")
+        }
         router.get("/:id") { req, res ->
             getId((req.params.id as? String)?.toIntOrNull() ?: -1, res)
         }
         router.delete("/:id") { req, res ->
             delId((req.params.id as? String)?.toIntOrNull() ?: -1, res)
+        }
+        router.post("/archive/:id") { req, res ->
+            archiveId((req.params.id as? String)?.toIntOrNull() ?: -1, res)
+        }
+        router.delete("/archive/:id") { req, res ->
+            unarchiveId((req.params.id as? String)?.toIntOrNull() ?: -1, res)
         }
     }
 
@@ -40,8 +49,8 @@ object Api {
         ))
     }
 
-    private fun get(sent: Int, res: dynamic) {
-        getSubmissionsFromDB(sent) { err, submissions ->
+    private fun get(sent: Int, res: dynamic, sentComparator: String = "=") {
+        getSubmissionsFromDB(sent, sentComparator) { err, submissions ->
             if (err != null || submissions == null) {
                 if (err != null) console.log(err as Any)
                 res.json(json("success" to false, "result" to null)) as? Unit
@@ -90,8 +99,22 @@ object Api {
         }
     }
 
-    private fun getSubmissionsFromDB(sent: Int, callback: (err: dynamic, rows: dynamic) -> Unit) {
-        db.all("SELECT * FROM submissions WHERE sent = (?) ORDER BY time DESC", arrayOf(sent)) { err, rows ->
+    private fun archiveId(id: Int, res: dynamic) {
+        archiveSubmissionFromDB(id) { err ->
+            if (err != null) console.log(err as Any)
+            res.json(json("success" to (err == null))) as? Unit
+        }
+    }
+
+    private fun unarchiveId(id: Int, res: dynamic) {
+        unarchiveSubmissionFromDB(id) { err ->
+            if (err != null) console.log(err as Any)
+            res.json(json("success" to (err == null))) as? Unit
+        }
+    }
+
+    private fun getSubmissionsFromDB(sent: Int, sentComparator: String, callback: (err: dynamic, rows: dynamic) -> Unit) {
+        db.all("SELECT * FROM submissions WHERE sent $sentComparator (?) ORDER BY time DESC", arrayOf(sent)) { err, rows ->
             if (err != null) callback(err, null) else callback(null, rows)
         }
     }
@@ -104,6 +127,20 @@ object Api {
 
     private fun deleteSubmissionFromDB(id: Int, callback: (err: dynamic) -> Unit) {
         db.run("DELETE FROM submissions WHERE id=(?)", arrayOf(id)) { err ->
+            if (err != null) callback(err) else callback(null)
+        }
+    }
+
+    // To archive the sent status gets increased by 10
+    private fun archiveSubmissionFromDB(id: Int, callback: (err: dynamic) -> Unit) {
+        db.run("UPDATE submissions SET sent=sent+10 WHERE id=(?)", arrayOf(id)) { err ->
+            if (err != null) callback(err) else callback(null)
+        }
+    }
+
+    // To unarchive the sent status gets decreased by 10
+    private fun unarchiveSubmissionFromDB(id: Int, callback: (err: dynamic) -> Unit) {
+        db.run("UPDATE submissions SET sent=sent-10 WHERE id=(?)", arrayOf(id)) { err ->
             if (err != null) callback(err) else callback(null)
         }
     }
