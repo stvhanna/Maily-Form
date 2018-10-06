@@ -69,11 +69,16 @@
                                                 <br />
                                                 <div v-html="submission.text"></div>
                                                 <br />
-                                                <textarea class="textarea" placeholder="Write a response"></textarea>
+                                                <textarea class="textarea" v-if="(submission.response === null)"
+                                                    placeholder="Write a response" v-model="tempResponse"></textarea>
+                                                <textarea class="textarea" v-if="(submission.response != null)"
+                                                    readonly>{{ submission.response }}</textarea>
+                                                <br />
                                             </section>
                                             <footer class="modal-card-foot">
                                                 <button class="button" @click="closeSubmission()">Close</button>
-                                                <button class="button is-success" @click="">Send response</button>
+                                                <button class="button is-success" @click="respond(submission.id, tempResponse)"
+                                                    v-if="(submission.response === null)">Send response</button>
                                                 <button class="button is-warning" @click="archiveSubmission(submission.id)"
                                                     v-if="(selector != 'archive')">Archive</button>
                                                 <button class="button is-warning" @click="unarchiveSubmission(submission.id)"
@@ -97,14 +102,16 @@
                 info: {},
                 selector: "sent",
                 submissions: [],
-                openSubmission: -1
+                openSubmission: -1,
+                tempResponse: ""
             },
             methods: {
                 deleteSubmission: deleteSubmission,
                 archiveSubmission: archiveSubmission,
                 unarchiveSubmission: unarchiveSubmission,
                 viewSubmission: viewSubmission,
-                closeSubmission: closeSubmission
+                closeSubmission: closeSubmission,
+                respond: respond
             },
             watch: {
                 selector: function (val) {
@@ -138,6 +145,12 @@
         function unarchiveSubmission(id) {
             axios.delete(`/api/archive/${id}`).
                 then(_ => getSubmissions(app.selector))
+        }
+
+        function respond(id, text) {
+            axios.post(`/api/respond/${id}`, { text: text }).
+                then(_ => getSubmissions(app.selector))
+            tempResponse = ""
         }
 
         function getSubmissions(selector) {

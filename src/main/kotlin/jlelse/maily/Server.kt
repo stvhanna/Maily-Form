@@ -20,6 +20,7 @@ object Server {
             app.use(errorHandler())
         }
 
+        app.use(express.json())
         app.use(cors(json("origin" to Config.corsHeader)))
         app.use(express.static("public"))
 
