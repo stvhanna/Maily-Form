@@ -49,8 +49,8 @@ object Api {
         ))
     }
 
-    private fun get(sent: Int, res: dynamic, sentComparator: String = "=") {
-        getSubmissionsFromDB(sent, sentComparator) { err, submissions ->
+    private fun get(status: Int, res: dynamic, statusComparator: String = "=") {
+        getSubmissionsFromDB(status, statusComparator) { err, submissions ->
             if (err != null || submissions == null) {
                 if (err != null) console.log(err as Any)
                 res.json(json("success" to false, "result" to null)) as? Unit
@@ -113,8 +113,8 @@ object Api {
         }
     }
 
-    private fun getSubmissionsFromDB(sent: Int, sentComparator: String, callback: (err: dynamic, rows: dynamic) -> Unit) {
-        db.all("SELECT * FROM submissions WHERE sent $sentComparator (?) ORDER BY time DESC", arrayOf(sent)) { err, rows ->
+    private fun getSubmissionsFromDB(status: Int, statusComparator: String, callback: (err: dynamic, rows: dynamic) -> Unit) {
+        db.all("SELECT * FROM submissions WHERE status $statusComparator (?) ORDER BY time DESC", arrayOf(status)) { err, rows ->
             if (err != null) callback(err, null) else callback(null, rows)
         }
     }
@@ -131,16 +131,16 @@ object Api {
         }
     }
 
-    // To archive the sent status gets increased by 10
+    // To archive the status gets increased by 10
     private fun archiveSubmissionFromDB(id: Int, callback: (err: dynamic) -> Unit) {
-        db.run("UPDATE submissions SET sent=sent+10 WHERE id=(?)", arrayOf(id)) { err ->
+        db.run("UPDATE submissions SET status=status+10 WHERE id=(?)", arrayOf(id)) { err ->
             if (err != null) callback(err) else callback(null)
         }
     }
 
-    // To unarchive the sent status gets decreased by 10
+    // To unarchive the status gets decreased by 10
     private fun unarchiveSubmissionFromDB(id: Int, callback: (err: dynamic) -> Unit) {
-        db.run("UPDATE submissions SET sent=sent-10 WHERE id=(?)", arrayOf(id)) { err ->
+        db.run("UPDATE submissions SET status=status-10 WHERE id=(?)", arrayOf(id)) { err ->
             if (err != null) callback(err) else callback(null)
         }
     }
