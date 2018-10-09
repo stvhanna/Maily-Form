@@ -45,7 +45,7 @@ object Forms {
         }
         form.on("end") {
             if (redirectTo?.isBlank() == false) {
-                res.writeHead(302, json("location" to redirectTo)) as? Unit
+                res.redirect(302, redirectTo) as? Unit
             } else {
                 res.json(json("status" to "success")) as? Unit
             }
