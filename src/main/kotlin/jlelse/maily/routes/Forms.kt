@@ -59,7 +59,7 @@ object Forms {
     }
 
     private fun addSubmissionToDB(formName: String?, replyTo: String?, text: String?, sent: Int) {
-        db.run("INSERT INTO submissions VALUES (NULL, ?, ?, ?, ?, ?)", arrayOf(Date.now(), formName, replyTo, text, sent)) { err ->
+        db.run("INSERT INTO submissions VALUES (NULL, ?, ?, ?, ?, NULL, ?)", arrayOf(Date.now(), formName, replyTo, text, sent)) { err ->
             if (err != null) console.log(err as Any)
         }
     }
