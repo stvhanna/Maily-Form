@@ -26,7 +26,7 @@
     "nodemailer": "4.6.8",
     "nodemailer-markdown": "1.0.2",
     "sanitize-html": "1.19.1",
-    "sqlite3": "4.0.2"
+    "sqlite3": "4.0.3"
   },
   "devDependencies": {
     "chai": "4.2.0",
