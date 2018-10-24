@@ -48,7 +48,8 @@ describe('Admin pages', () => {
 
         it('returns HTML content', (done) => {
             request(authorizedOptions, (error, response, body) => {
-                assert.include(body, 'vue');
+                assert.include(body, 'html');
+                assert.include(body, 'body');
                 done();
             });
         });

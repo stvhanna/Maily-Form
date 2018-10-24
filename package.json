@@ -4,7 +4,7 @@
   "description": "Forms to Email",
   "main": "app/index.js",
   "scripts": {
-    "build": "./gradlew build",
+    "build": "./gradlew build && npm run build --prefix admin",
     "start": "NODE_ENV=production node app/index.js",
     "test": "NODE_ENV=test mocha --exit tests/**/*_spec.js"
   },

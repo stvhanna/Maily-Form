@@ -6,7 +6,7 @@ FROM node:10-alpine as build
 COPY . /app
 WORKDIR /app
 RUN apk add --update sqlite-libs sqlite-dev python build-base openjdk8 && rm -rf /var/cache/apk/*
-RUN npm install
+RUN npm i && npm i --prefix admin
 RUN npm run build
 RUN npm test
 RUN rm -rf .gradle build src tests

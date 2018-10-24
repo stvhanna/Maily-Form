@@ -32,7 +32,7 @@ object Server {
             }
 
             app.use("/api", auth.connect(basicAuth), Api.router)
-            app.use("/admin", auth.connect(basicAuth), express.static("admin"))
+            app.use("/admin", auth.connect(basicAuth), express.static("admin/dist"))
         }
     }
 }
