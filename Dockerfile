@@ -21,13 +21,12 @@ LABEL maintainer="Jan-Lukas Else (https://about.jlelse.de)"
 # Copy just needed directories
 COPY --from=build /app/admin/dist /app/admin/dist
 COPY --from=build /app/app /app/app
-COPY --from=build /app/node_modules /app/node_modules
 COPY --from=build /app/public /app/public
 COPY --from=build /app/package.json /app/package.json
 COPY --from=build /app/package-lock.json /app/package-lock.json
 
 WORKDIR /app
-RUN apk add --no-cache sqlite-libs && mkdir /app/data
+RUN apk add --no-cache sqlite-libs && mkdir /app/data && npm i --production
 
 EXPOSE 8080
 CMD ["npm", "start"]

@@ -70,6 +70,3 @@ function viewSubmission(id) {
 function closeSubmission() {
     app.openSubmission = -1
 }
-
-// Bulma
-require('./styles.scss');
