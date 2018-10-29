@@ -10,13 +10,13 @@
   "scripts": {
     "build": "npm run js-build && npm run css-build",
     "js-build": "webpack",
-    "css-build": "node-sass -x sass/styles.scss dist/styles.css --output-style compressed"
+    "css-build": "sass sass/styles.scss dist/styles.css --no-source-map --style compressed"
   },
   "devDependencies": {
     "axios": "0.18.0",
     "vue": "2.5.17",
     "bulma": "0.7.2",
-    "node-sass": "4.9.4",
+    "sass": "1.14.3",
     "webpack": "4.23.1",
     "webpack-cli": "3.1.2"
   }

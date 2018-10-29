@@ -21,7 +21,7 @@
     "express": "4.16.4",
     "formidable": "1.2.1",
     "http-auth": "3.2.3",
-    "kotlin": "1.2.71",
+    "kotlin": "1.3.0",
     "marked": "0.5.1",
     "nodemailer": "4.6.8",
     "nodemailer-markdown": "1.0.2",
