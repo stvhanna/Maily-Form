@@ -5,7 +5,7 @@
 FROM node:10-alpine as build
 COPY . /app
 WORKDIR /app
-RUN apk add --no-cache sqlite-libs sqlite-dev python build-base openjdk8
+RUN apk add --no-cache python build-base openjdk8
 RUN npm i && npm i --prefix admin
 RUN npm run build
 RUN npm test
@@ -24,9 +24,10 @@ COPY --from=build /app/app /app/app
 COPY --from=build /app/public /app/public
 COPY --from=build /app/package.json /app/package.json
 COPY --from=build /app/package-lock.json /app/package-lock.json
+COPY --from=build /app/node_modules /app/node_modules
 
 WORKDIR /app
-RUN apk add --no-cache sqlite-libs && mkdir /app/data && npm i --production
+RUN mkdir /app/data && npm prune --production
 
 EXPOSE 8080
 CMD ["npm", "start"]

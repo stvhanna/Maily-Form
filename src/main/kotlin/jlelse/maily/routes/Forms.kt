@@ -11,7 +11,8 @@ object Forms {
     private val express = require("express")
     private val formidable = require("formidable")
     private val sanitizeHtml = require("sanitize-html")
-    private val db = Database.connect()
+
+    private val db = Database.db
 
     val router: dynamic = express.Router()
 
@@ -59,8 +60,11 @@ object Forms {
     }
 
     private fun addSubmissionToDB(formName: String?, replyTo: String?, text: String?, sent: Int) {
-        db.run("INSERT INTO submissions VALUES (NULL, ?, ?, ?, ?, NULL, ?)", arrayOf(Date.now(), formName, replyTo, text, sent)) { err ->
-            if (err != null) console.log(err as Any)
+        try {
+            db.prepare("INSERT INTO submissions VALUES (NULL, ?, ?, ?, ?, NULL, ?)").run(Date.now(), formName, replyTo, text, sent)
+        } catch (e: Error) {
+            console.log("Failed to add submission to Database")
+            console.log(e.message)
         }
     }
 

@@ -10,7 +10,5 @@ fun main(args: Array<String>) {
     }
 }
 
-fun testServer() = "Hello kotlin"
-
 external fun require(module: String): dynamic
 external var process: dynamic

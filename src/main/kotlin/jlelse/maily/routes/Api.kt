@@ -11,7 +11,8 @@ import kotlin.js.json
 object Api {
     private val express = require("express")
     private val marked = require("marked")
-    private val db = Database.connect()
+
+    private val db = Database.db
 
     val router: dynamic = express.Router()
 
@@ -57,7 +58,7 @@ object Api {
     private fun get(status: Int, res: dynamic, statusComparator: String = "=") {
         getSubmissionsFromDB(status, statusComparator) { err, submissions ->
             if (err != null || submissions == null) {
-                if (err != null) console.log(err as Any)
+                if (err != null) console.log(err.message)
                 res.json(json("success" to false, "result" to null)) as? Unit
             } else {
                 res.json(json(
@@ -74,7 +75,7 @@ object Api {
     private fun getId(id: Int, res: dynamic) {
         getSubmissionFromDB(id) { err, submission ->
             if (err != null || submission == null) {
-                if (err != null) console.log(err as Any)
+                if (err != null) console.log(err.message)
                 res.json(json("success" to false, "result" to null)) as? Unit
             } else {
                 res.json(json(
@@ -98,21 +99,21 @@ object Api {
 
     private fun delId(id: Int, res: dynamic) {
         deleteSubmissionFromDB(id) { err ->
-            if (err != null) console.log(err as Any)
+            if (err != null) console.log(err.message)
             res.json(json("success" to (err == null))) as? Unit
         }
     }
 
     private fun archiveId(id: Int, res: dynamic) {
         archiveSubmissionFromDB(id) { err ->
-            if (err != null) console.log(err as Any)
+            if (err != null) console.log(err.message)
             res.json(json("success" to (err == null))) as? Unit
         }
     }
 
     private fun unarchiveId(id: Int, res: dynamic) {
         unarchiveSubmissionFromDB(id) { err ->
-            if (err != null) console.log(err as Any)
+            if (err != null) console.log(err.message)
             res.json(json("success" to (err == null))) as? Unit
         }
     }
@@ -121,7 +122,7 @@ object Api {
         if (!text.isBlank()) {
             getSubmissionFromDB(id) { err, row ->
                 if (err != null) {
-                    console.log(err as Any)
+                    console.log(err.message)
                     res.json(json("success" to false)) as? Unit
                 } else {
                     // Setup mail
@@ -146,41 +147,59 @@ object Api {
         }
     }
 
-    private fun getSubmissionsFromDB(status: Int, statusComparator: String, callback: (err: dynamic, rows: dynamic) -> Unit) {
-        db.all("SELECT * FROM submissions WHERE status $statusComparator (?) ORDER BY time DESC", arrayOf(status)) { err, rows ->
-            if (err != null) callback(err, null) else callback(null, rows)
+    private fun getSubmissionsFromDB(status: Int, statusComparator: String, callback: (err: Error?, rows: dynamic) -> Unit) {
+        try {
+            val rows: dynamic = db.prepare("SELECT * FROM submissions WHERE status $statusComparator (?) ORDER BY time DESC").all(status)
+            callback(null, rows)
+        } catch (e: Error) {
+            callback(e, null)
         }
     }
 
-    private fun getSubmissionFromDB(id: Int, callback: (err: dynamic, row: dynamic) -> Unit) {
-        db.get("SELECT * FROM submissions WHERE id=(?)", arrayOf(id)) { err, row ->
-            if (err != null) callback(err, null) else callback(null, row)
+    private fun getSubmissionFromDB(id: Int, callback: (err: Error?, row: dynamic) -> Unit) {
+        try {
+            val row: dynamic = db.prepare("SELECT * FROM submissions WHERE id=(?)").get(id)
+            callback(null, row)
+        } catch (e: Error) {
+            callback(e, null)
         }
     }
 
-    private fun deleteSubmissionFromDB(id: Int, callback: (err: dynamic) -> Unit) {
-        db.run("DELETE FROM submissions WHERE id=(?)", arrayOf(id)) { err ->
-            if (err != null) callback(err) else callback(null)
+    private fun deleteSubmissionFromDB(id: Int, callback: (err: Error?) -> Unit) {
+        try {
+            db.prepare("DELETE FROM submissions WHERE id=(?)").run(id)
+            callback(null)
+        } catch (e: Error) {
+            callback(e)
         }
     }
 
     // To archive the status gets increased by 10
-    private fun archiveSubmissionFromDB(id: Int, callback: (err: dynamic) -> Unit) {
-        db.run("UPDATE submissions SET status=status+10 WHERE id=(?)", arrayOf(id)) { err ->
-            if (err != null) callback(err) else callback(null)
+    private fun archiveSubmissionFromDB(id: Int, callback: (err: Error?) -> Unit) {
+        try {
+            db.prepare("UPDATE submissions SET status=status+10 WHERE id=(?)").run(id)
+            callback(null)
+        } catch (e: Error) {
+            callback(e)
         }
     }
 
     // To unarchive the status gets decreased by 10
-    private fun unarchiveSubmissionFromDB(id: Int, callback: (err: dynamic) -> Unit) {
-        db.run("UPDATE submissions SET status=status-10 WHERE id=(?)", arrayOf(id)) { err ->
-            if (err != null) callback(err) else callback(null)
+    private fun unarchiveSubmissionFromDB(id: Int, callback: (err: Error?) -> Unit) {
+        try {
+            db.prepare("UPDATE submissions SET status=status-10 WHERE id=(?)").run(id)
+            callback(null)
+        } catch (e: Error) {
+            callback(e)
         }
     }
 
-    private fun addResponseToDB(id: Int, text: String, callback: (err: dynamic) -> Unit) {
-        db.run("UPDATE submissions SET response=(?) WHERE id=(?)", arrayOf(text, id)) { err ->
-            if (err != null) callback(err) else callback(null)
+    private fun addResponseToDB(id: Int, text: String, callback: (err: Error?) -> Unit) {
+        try {
+            db.prepare("UPDATE submissions SET response=(?) WHERE id=(?)").run(text, id)
+            callback(null)
+        } catch (e: Error) {
+            callback(e)
         }
     }
 }

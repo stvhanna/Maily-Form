@@ -1,70 +1,63 @@
 package jlelse.maily.lib
 
 import jlelse.maily.require
+import kotlin.js.json
 
 object Database {
-    private val db = getDb(Config.database)
+    val db: dynamic = connect()
 
-    init {
-        createAndMigrate()
+    private fun connect(): dynamic {
+        try {
+            val db = getDb(Config.database)
+            createAndMigrate(db)
+            return db
+        } catch (err: Error) {
+            console.log("Failed to connect to Database")
+            throw err
+        }
     }
 
-    fun connect(): dynamic {
-        return db
-    }
-
-    fun disconnect() {
-        db.close()
-    }
-
-    private fun createAndMigrate() {
+    private fun createAndMigrate(db: dynamic) {
         val latestVersion = 1
         // Create Database if it doesn't exist yet
-        db.get("PRAGMA schema_version") { err, row ->
-            if (err != null) console.log(err.message as? String)
-            else {
-                val schemaVersion = row.schema_version
-                if (schemaVersion == 0) {
-                    console.log("Create Database")
-                    db.exec("CREATE TABLE IF NOT EXISTS submissions (id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, formName TEXT, replyTo TEXT, text TEXT, response TEXT, status INTEGER);PRAGMA user_version = $latestVersion;") { err2 ->
-                        if (err2 != null) console.log(err2.message as? String)
-                        else console.log("Database created")
-                    }
-                } else {
-                    db.get("PRAGMA user_version") { err2, row2 ->
-                        if (err2 != null) console.log(err2.message as? String)
-                        else {
-                            // Check and migrate Database
-                            val userVersion = row2.user_version
-                            console.log("Current DB version: $userVersion")
-                            var migrationStatement = ""
-                            // Version 1 changes sent to status and adds response text
-                            if (userVersion < 1) migrationStatement += """
+        val schemaVersion = db.pragma("schema_version", json("simple" to true)) as Int
+        if (schemaVersion == 0) {
+            console.log("Create Database")
+            try {
+                db.exec("CREATE TABLE IF NOT EXISTS submissions (id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, formName TEXT, replyTo TEXT, text TEXT, response TEXT, status INTEGER);PRAGMA user_version = $latestVersion;")
+                console.log("Database created")
+            } catch (e: Error) {
+                console.log("Failed to create Database")
+                throw e
+            }
+        } else {
+            // Check and migrate Database
+            val userVersion = db.pragma("user_version", json("simple" to true)) as Int
+            console.log("Current DB version: $userVersion")
+            var migrationStatement = ""
+            // Version 1 changes sent to status and adds response text
+            if (userVersion < 1) migrationStatement += """
                                 ALTER TABLE submissions RENAME TO tmp_submissions;
                                 CREATE TABLE submissions (id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, formName TEXT, replyTo TEXT, text TEXT, response TEXT, status INTEGER);
                                 INSERT INTO submissions(id, time, formName, replyTo, text, status) SELECT id, time, formName, replyTo, text, sent FROM tmp_submissions;
                                 DROP TABLE tmp_submissions;
                             """.trimIndent()
-                            if (!migrationStatement.isBlank()) {
-                                console.log("Migrating DB to latest version.")
-                                db.exec("BEGIN TRANSACTION;${migrationStatement}PRAGMA user_version = $latestVersion;COMMIT;") { err3 ->
-                                    if (err3 != null) console.log(err3.message as? String)
-                                    else console.log("Migration finished.")
-                                }
-                            }
-                        }
-                    }
+            if (!migrationStatement.isBlank()) {
+                console.log("Migrating DB to latest version.")
+                try {
+                    db.exec("BEGIN TRANSACTION;${migrationStatement}PRAGMA user_version = $latestVersion;COMMIT;")
+                    console.log("Migration finished.")
+                } catch (e: Error) {
+                    console.log("Failed to migrate Database")
+                    throw e
                 }
             }
         }
     }
 
     private fun getDb(dbPath: String): dynamic {
-        @Suppress("UNUSED_VARIABLE", "NAME_SHADOWING")
-        val dbPath = dbPath
-        @Suppress("UNUSED_VARIABLE")
-        val sqlite = require("sqlite3").verbose()
-        return js("new sqlite.Database(dbPath)")
+        val betterSqlite = require("better-sqlite3")
+        return betterSqlite(dbPath)
     }
 
 }
