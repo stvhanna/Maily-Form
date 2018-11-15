@@ -2,7 +2,7 @@
 # STAGE 1
 # - Install and build necessary dependencies
 #
-FROM node:11-alpine as build
+FROM node:10.14.2-alpine as build
 COPY . /app
 WORKDIR /app
 RUN apk add --no-cache python build-base openjdk8
@@ -15,7 +15,7 @@ RUN rm -rf .gradle build src tests
 # STAGE 2
 # - Keep Only runtime libraries: no build tool is allowed in production.
 #
-FROM node:11-alpine
+FROM node:10.14.2-alpine
 LABEL maintainer="Jan-Lukas Else (https://about.jlelse.de)"
 
 # Copy just needed directories

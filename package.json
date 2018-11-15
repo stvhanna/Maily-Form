@@ -5,6 +5,7 @@
   "main": "app/index.js",
   "scripts": {
     "build": "./gradlew build && npm run build --prefix admin",
+    "package": "nexe app/index.js -r \"admin/dist/*\" -o maily-form -t alpine-x64-10.14.0",
     "start": "NODE_ENV=production node app/index.js",
     "test": "NODE_ENV=test mocha --exit tests/**/*_spec.js"
   },
@@ -16,22 +17,23 @@
     "url": "https://github.com/jlelse/Maily-Form.git"
   },
   "dependencies": {
-    "better-sqlite3": "^5.0.1",
+    "better-sqlite3": "5.2.0",
     "cors": "2.8.5",
     "errorhandler": "1.5.0",
     "express": "4.16.4",
     "formidable": "1.2.1",
     "http-auth": "3.2.3",
-    "kotlin": "1.3.10",
-    "marked": "0.5.1",
-    "nodemailer": "4.6.8",
+    "kotlin": "1.3.11",
+    "marked": "0.5.2",
+    "nodemailer": "4.7.0",
     "nodemailer-markdown": "1.0.2",
-    "sanitize-html": "1.19.1"
+    "sanitize-html": "1.19.3"
   },
   "devDependencies": {
     "chai": "4.2.0",
     "mailparser-mit": "0.6.2",
     "mocha": "5.2.0",
+    "nexe": "3.0.0-beta.11",
     "request": "2.88.0",
     "smtp-server": "3.4.7"
   }

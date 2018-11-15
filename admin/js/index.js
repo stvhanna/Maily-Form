@@ -16,13 +16,11 @@ const router = new VueRouter({
         },
         {
             name: 'submissions',
-            path: '/:selector',
-            component: submissions
+            path: '/:selector'
         },
         {
             name: 'modal',
-            path: '/:selector/:id',
-            component: submissions
+            path: '/:selector/:sid'
         }
     ]
 });

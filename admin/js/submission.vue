@@ -11,7 +11,7 @@
                v-if="($route.params.selector !== 'archive')">Archive</a>
             <a class="has-text-warning" @click="$root.unarchiveSubmission(submission.id)"
                v-if="($route.params.selector === 'archive')">Unarchive</a>
-            <router-link :to="{ name: 'modal', params: { selector: $route.params.selector, id: submission.id }}">
+            <router-link :to="{ name: 'modal', params: { selector: $route.params.selector, sid: submission.id }}">
                 View
             </router-link>
             <modal :submission="submission"></modal>

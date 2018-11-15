@@ -1,5 +1,5 @@
 <template>
-    <div class="modal" v-bind:class="{'is-active':($route.params.id === submission.id)}">
+    <div class="modal" v-bind:class="{'is-active':(parseInt($route.params.sid) === submission.id)}">
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
