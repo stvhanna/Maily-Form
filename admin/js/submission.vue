@@ -8,9 +8,9 @@
         <td>
             <a class="has-text-danger" @click="$root.deleteSubmission(submission.id)">Delete</a>
             <a class="has-text-warning" @click="$root.archiveSubmission(submission.id)"
-               v-if="($root.selector !== 'archive')">Archive</a>
+               v-if="($route.params.selector !== 'archive')">Archive</a>
             <a class="has-text-warning" @click="$root.unarchiveSubmission(submission.id)"
-               v-if="($root.selector === 'archive')">Unarchive</a>
+               v-if="($route.params.selector === 'archive')">Unarchive</a>
             <a class="has-text-info" @click="$root.viewSubmission(submission.id)">View</a>
             <div class="modal" v-bind:class="{'is-active':($root.openSubmission === submission.id)}">
                 <div class="modal-background"></div>
@@ -40,10 +40,10 @@
                                 v-if="(submission.response === null)">Send response
                         </button>
                         <button class="button is-warning" @click="$root.archiveSubmission(submission.id)"
-                                v-if="($root.selector !== 'archive')">Archive
+                                v-if="($route.params.selector !== 'archive')">Archive
                         </button>
                         <button class="button is-warning" @click="$root.unarchiveSubmission(submission.id)"
-                                v-if="($root.selector === 'archive')">Unarchive
+                                v-if="($route.params.selector === 'archive')">Unarchive
                         </button>
                         <button class="button is-danger" @click="$root.deleteSubmission(submission.id)">Delete</button>
                     </footer>

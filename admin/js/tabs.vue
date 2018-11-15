@@ -1,14 +1,14 @@
 <template>
     <div class="tabs">
         <ul>
-            <li v-bind:class="{'is-active':($root.selector === 'sent')}">
-                <a @click="$root.selector='sent'">Sent</a>
+            <li v-bind:class="{'is-active':($route.params.selector === 'sent')}">
+                <router-link to="/sent">Sent</router-link>
             </li>
-            <li v-bind:class="{'is-active':($root.selector === 'spam')}">
-                <a @click="$root.selector='spam'">Spam</a>
+            <li v-bind:class="{'is-active':($route.params.selector === 'spam')}">
+                <router-link to="/spam">Spam</router-link>
             </li>
-            <li v-bind:class="{'is-active':($root.selector === 'archive')}">
-                <a @click="$root.selector='archive'">Archive</a>
+            <li v-bind:class="{'is-active':($route.params.selector === 'archive')}">
+                <router-link to="/archive">Archive</router-link>
             </li>
         </ul>
     </div>

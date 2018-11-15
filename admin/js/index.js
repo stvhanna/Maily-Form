@@ -1,15 +1,31 @@
 import axios from 'axios';
 import Vue from 'vue';
+import VueRouter from 'vue-router';
 
 import hero from './hero.vue';
-import tabs from './tabs.vue';
 import submissions from './submissions.vue';
+import tabs from './tabs.vue';
+
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+    routes: [
+        {
+            path: '*',
+            redirect: '/sent'
+        },
+        {
+            path: '/:selector',
+            component: submissions
+        }
+    ]
+});
 
 const app = new Vue({
+    router: router,
     el: '#app',
     data: {
         info: {},
-        selector: "sent",
         submissions: [],
         openSubmission: -1,
         tempResponse: ""
@@ -28,13 +44,15 @@ const app = new Vue({
         'submissions': submissions
     },
     watch: {
-        selector: function (val) {
-            getSubmissions(val)
+        '$route'(to, from) {
+            if (from.params.selector !== to.params.selector) {
+                getSubmissions(to.params.selector)
+            }
         }
     },
     mounted() {
         getInfo();
-        getSubmissions(this.selector)
+        getSubmissions(router.currentRoute.params.selector)
     }
 });
 
@@ -48,22 +66,22 @@ function getInfo() {
 
 function deleteSubmission(id) {
     axios.delete(`/api/${id}`).
-        then(_ => getSubmissions(app.selector))
+        then(_ => getSubmissions(router.currentRoute.params.selector))
 }
 
 function archiveSubmission(id) {
     axios.post(`/api/archive/${id}`).
-        then(_ => getSubmissions(app.selector))
+        then(_ => getSubmissions(router.currentRoute.params.selector))
 }
 
 function unarchiveSubmission(id) {
     axios.delete(`/api/archive/${id}`).
-        then(_ => getSubmissions(app.selector))
+        then(_ => getSubmissions(router.currentRoute.params.selector))
 }
 
 function respond(id, text) {
     axios.post(`/api/respond/${id}`, {text: text}).
-        then(_ => getSubmissions(app.selector));
+        then(_ => getSubmissions(router.currentRoute.params.selector));
     app.tempResponse = ""
 }
 
