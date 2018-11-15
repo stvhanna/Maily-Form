@@ -32,8 +32,7 @@ const app = new Vue({
     el: '#app',
     data: {
         info: {},
-        submissions: [],
-        tempResponse: ""
+        submissions: []
     },
     methods: {
         deleteSubmission: deleteSubmission,
@@ -69,23 +68,22 @@ function getInfo() {
 
 function deleteSubmission(id) {
     axios.delete(`/api/${id}`).
-        then(_ => getSubmissions(router.currentRoute.params.selector))
+        then(() => getSubmissions(router.currentRoute.params.selector))
 }
 
 function archiveSubmission(id) {
     axios.post(`/api/archive/${id}`).
-        then(_ => getSubmissions(router.currentRoute.params.selector))
+        then(() => getSubmissions(router.currentRoute.params.selector))
 }
 
 function unarchiveSubmission(id) {
     axios.delete(`/api/archive/${id}`).
-        then(_ => getSubmissions(router.currentRoute.params.selector))
+        then(() => getSubmissions(router.currentRoute.params.selector))
 }
 
 function respond(id, text) {
     axios.post(`/api/respond/${id}`, {text: text}).
-        then(_ => getSubmissions(router.currentRoute.params.selector));
-    app.tempResponse = ""
+        then(() => getSubmissions(router.currentRoute.params.selector))
 }
 
 function getSubmissions(selector) {

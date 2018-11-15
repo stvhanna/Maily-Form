@@ -12,15 +12,16 @@
                 <br/>
                 <div v-html="submission.text"></div>
                 <br/>
-                <label>
+                <div v-if="(submission.response != null)">
+                    <b>Response:</b>
+                    <div v-html="submission.response"></div>
+                </div>
+                <label v-if="(submission.response === null)">
                     <b>Response:</b>
                     <textarea class="textarea"
                               v-if="(submission.response === null)"
                               placeholder="Write a response"
-                              v-model="$root.tempResponse">{{ submission.response }}</textarea>
-                    <textarea class="textarea"
-                              v-if="(submission.response != null)"
-                              readonly>{{ submission.response }}</textarea>
+                              v-model="tempResponse"></textarea>
                 </label>
                 <br/>
             </section>
@@ -29,7 +30,7 @@
                     Close
                 </router-link>
                 <button class="button is-success"
-                        @click="$root.respond(submission.id, $root.tempResponse)"
+                        @click="respond()"
                         v-if="(submission.response === null)">
                     Send response
                 </button>
@@ -50,6 +51,10 @@
 </template>
 
 <script>
+    function respond() {
+        this.$root.respond(this.submission.id, this.tempResponse);
+    }
+
     export default {
         name: "modal",
         props: {
@@ -57,6 +62,14 @@
                 type: Object,
                 required: true
             }
+        },
+        data() {
+            return {
+                tempResponse: ""
+            }
+        },
+        methods: {
+            respond: respond
         }
     }
 </script>
