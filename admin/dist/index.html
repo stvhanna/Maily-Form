@@ -10,90 +10,16 @@
 </head>
 
 <body>
-    <div id="app">
-        <section class="hero">
-            <div class="hero-body">
-                <div class="container">
-                    <h1 class="title">{{ info.title }}</h1>
-                    <h2 class="subtitle">Manage submissions</h2>
-                </div>
-            </div>
-        </section>
-        <section class="section">
-            <div class="container">
-                <div class="tabs">
-                    <ul>
-                        <li v-bind:class="{'is-active':(selector === 'sent')}"><a @click="selector='sent'">Sent</a></li>
-                        <li v-bind:class="{'is-active':(selector === 'spam')}"><a @click="selector='spam'">Spam</a></li>
-                        <li v-bind:class="{'is-active':(selector === 'archive')}"><a @click="selector='archive'">Archive</a></li>
-                    </ul>
-                </div>
-                <div class="table-container">
-                    <table class="table is-bordered is-fullwidth">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Time</th>
-                                <th scope="col">Form Name</th>
-                                <th scope="col">Reply-To</th>
-                                <th scope="col">Text</th>
-                                <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="submission in submissions">
-                                <th scope="row">{{ submission.id }}</th>
-                                <td v-bind:title="submission.time">{{ new Date(submission.time).toLocaleString() }}</td>
-                                <td>{{ submission.formName }}</td>
-                                <td>{{ submission.replyTo }}</td>
-                                <td v-html="submission.text"></td>
-                                <td>
-                                    <a class="has-text-danger" @click="deleteSubmission(submission.id)">Delete</a>
-                                    <a class="has-text-warning" @click="archiveSubmission(submission.id)" v-if="(selector != 'archive')">Archive</a>
-                                    <a class="has-text-warning" @click="unarchiveSubmission(submission.id)" v-if="(selector === 'archive')">Unarchive</a>
-                                    <a class="has-text-info" @click="viewSubmission(submission.id)">View</a>
-                                    <div class="modal" v-bind:class="{'is-active':(openSubmission === submission.id)}">
-                                        <div class="modal-background"></div>
-                                        <div class="modal-card">
-                                            <header class="modal-card-head">
-                                                <p class="modal-card-title">{{ submission.formName }}: #{{
-                                                    submission.id }}</p>
-                                                <button class="delete" aria-label="close" @click="closeSubmission()"></button>
-                                            </header>
-                                            <section class="modal-card-body">
-                                                <div class="is-italic has-text-weight-light">{{ new
-                                                    Date(submission.time).toLocaleString() }}</div>
-                                                <div class="is-italic has-text-weight-light">{{ submission.replyTo }}</div>
-                                                <br />
-                                                <div v-html="submission.text"></div>
-                                                <br />
-                                                <textarea class="textarea" v-if="(submission.response === null)"
-                                                    placeholder="Write a response" v-model="tempResponse"></textarea>
-                                                <textarea class="textarea" v-if="(submission.response != null)"
-                                                    readonly>{{ submission.response }}</textarea>
-                                                <br />
-                                            </section>
-                                            <footer class="modal-card-foot">
-                                                <button class="button" @click="closeSubmission()">Close</button>
-                                                <button class="button is-success" @click="respond(submission.id, tempResponse)"
-                                                    v-if="(submission.response === null)">Send response</button>
-                                                <button class="button is-warning" @click="archiveSubmission(submission.id)"
-                                                    v-if="(selector != 'archive')">Archive</button>
-                                                <button class="button is-warning" @click="unarchiveSubmission(submission.id)"
-                                                    v-if="(selector === 'archive')">Unarchive</button>
-                                                <button class="button is-danger" @click="deleteSubmission(submission.id)">Delete</button>
-                                            </footer>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-    </div>
-    <script src="bundle.js"></script>
+<div id="app">
+    <hero></hero>
+    <section class="section">
+        <div class="container">
+            <tabs></tabs>
+            <submissions :submissions="submissions"></submissions>
+        </div>
+    </section>
+</div>
+<script src="bundle.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,9 @@
-import Vue from 'vue';
 import axios from 'axios';
+import Vue from 'vue';
+
+import hero from './hero.vue';
+import tabs from './tabs.vue';
+import submissions from './submissions.vue';
 
 const app = new Vue({
     el: '#app',
@@ -17,6 +21,11 @@ const app = new Vue({
         viewSubmission: viewSubmission,
         closeSubmission: closeSubmission,
         respond: respond
+    },
+    components: {
+        'hero': hero,
+        'tabs': tabs,
+        'submissions': submissions
     },
     watch: {
         selector: function (val) {
@@ -53,7 +62,7 @@ function unarchiveSubmission(id) {
 }
 
 function respond(id, text) {
-    axios.post(`/api/respond/${id}`, { text: text }).
+    axios.post(`/api/respond/${id}`, {text: text}).
         then(_ => getSubmissions(app.selector));
     app.tempResponse = ""
 }

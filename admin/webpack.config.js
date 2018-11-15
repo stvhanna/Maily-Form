@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const VueLoaderPlugin = require("vue-loader").VueLoaderPlugin;
 
 module.exports = {
     entry: './js/index.js',
@@ -13,5 +14,16 @@ module.exports = {
         alias: {
             vue: 'vue/dist/vue.common.js'
         }
-    }
+    },
+    module: {
+        rules: [
+            {
+                test: /\.vue$/,
+                use: 'vue-loader'
+            }
+        ]
+    },
+    plugins: [
+        new VueLoaderPlugin()
+    ]
 };
