@@ -15,7 +15,13 @@ const router = new VueRouter({
             redirect: '/sent'
         },
         {
+            name: 'submissions',
             path: '/:selector',
+            component: submissions
+        },
+        {
+            name: 'modal',
+            path: '/:selector/:id',
             component: submissions
         }
     ]
@@ -27,15 +33,12 @@ const app = new Vue({
     data: {
         info: {},
         submissions: [],
-        openSubmission: -1,
         tempResponse: ""
     },
     methods: {
         deleteSubmission: deleteSubmission,
         archiveSubmission: archiveSubmission,
         unarchiveSubmission: unarchiveSubmission,
-        viewSubmission: viewSubmission,
-        closeSubmission: closeSubmission,
         respond: respond
     },
     components: {
@@ -88,12 +91,4 @@ function respond(id, text) {
 function getSubmissions(selector) {
     axios.get(`/api/${selector}`).
         then(response => (app.submissions = response.data.result.submissions))
-}
-
-function viewSubmission(id) {
-    app.openSubmission = id
-}
-
-function closeSubmission() {
-    app.openSubmission = -1
 }
