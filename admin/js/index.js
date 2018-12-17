@@ -44,6 +44,7 @@ const vueApp = new Vue({
     },
     methods: {
         login: login,
+        logout: logout,
         deleteSubmission: deleteSubmission,
         archiveSubmission: archiveSubmission,
         unarchiveSubmission: unarchiveSubmission,
@@ -100,6 +101,16 @@ function login() {
     };
     vueApp.loggedIn = true;
     getInfo();
+}
+
+function logout() {
+    sessionStorage.removeItem("authToken");
+    localStorage.removeItem("authToken");
+    axios.defaults.headers.common = {
+        "Authorization": ""
+    };
+    vueApp.loggedIn = false;
+    router.replace({path: '/login'});
 }
 
 function getInfo() {
