@@ -1,9 +1,10 @@
 <template>
     <div>
-        <div v-if="($route.params.selector === 'spam')">
+        <div v-if="($route.params.selector === 'spam')" class="buttons">
             <a class="button is-danger is-fullwidth"
-               @click="$root.deleteSubmissions($route.params.selector)">Delete all</a>
-            <br>
+               @click="$root.deleteSubmissions($route.params.selector)">
+                Delete all
+            </a>
         </div>
         <div class="table-container">
             <table class="table is-bordered is-fullwidth">

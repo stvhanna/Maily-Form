@@ -26,23 +26,31 @@
                 <br/>
             </section>
             <footer class="modal-card-foot">
-                <a class="button" @click="$router.go(-1)">Close</a>
-                <button class="button is-success"
-                        @click="respond()"
-                        v-if="(submission.response === null)">
-                    Send response
-                </button>
-                <button class="button is-warning"
-                        @click="$root.archiveSubmission(submission.id)"
-                        v-if="($route.params.selector !== 'archive')">
-                    Archive
-                </button>
-                <button class="button is-warning"
-                        @click="$root.unarchiveSubmission(submission.id)"
-                        v-if="($route.params.selector === 'archive')">
-                    Unarchive
-                </button>
-                <button class="button is-danger" @click="$root.deleteSubmission(submission.id)">Delete</button>
+                <div class="buttons">
+                    <a class="button"
+                       @click="$router.go(-1)">
+                        Close
+                    </a>
+                    <a class="button is-success"
+                       @click="respond()"
+                       v-if="(submission.response === null)">
+                        Send response
+                    </a>
+                    <a class="button is-warning"
+                       @click="$root.archiveSubmission(submission.id)"
+                       v-if="($route.params.selector !== 'archive')">
+                        Archive
+                    </a>
+                    <a class="button is-warning"
+                       @click="$root.unarchiveSubmission(submission.id)"
+                       v-if="($route.params.selector === 'archive')">
+                        Unarchive
+                    </a>
+                    <a class="button is-danger"
+                       @click="$root.deleteSubmission(submission.id)">
+                        Delete
+                    </a>
+                </div>
             </footer>
         </div>
     </div>
