@@ -14,6 +14,10 @@ object Api {
 
     private val db = Database.db
 
+    private const val STATUS_SENT = 1
+    private const val STATUS_SPAM = 2
+    private const val STATUS_ARCHIVE = 10
+
     val router: dynamic = express.Router()
 
     init {
@@ -21,16 +25,19 @@ object Api {
             info(res)
         }
         router.get("/sent") { _, res ->
-            get(1, res)
+            get(STATUS_SENT, res)
         }
         router.get("/spam") { _, res ->
-            get(2, res)
+            get(STATUS_SPAM, res)
         }
         router.get("/archive") { _, res ->
-            get(10, res, ">")
+            get(STATUS_ARCHIVE, res, ">")
         }
         router.get("/:id") { req, res ->
             getId((req.params.id as? String)?.toIntOrNull() ?: -1, res)
+        }
+        router.delete("/spam") { _, res ->
+            del(STATUS_SPAM, res)
         }
         router.delete("/:id") { req, res ->
             delId((req.params.id as? String)?.toIntOrNull() ?: -1, res)
@@ -95,6 +102,13 @@ object Api {
                 "text" to marked(submission.text).replace("/\n*$/", ""),
                 "response" to submission.response
         )
+    }
+
+    private fun del(status: Int, res: dynamic) {
+        deleteSubmissionsFromDB(status) { err ->
+            if (err != null) console.log(err.message)
+            res.json(json("success" to (err == null))) as? Unit
+        }
     }
 
     private fun delId(id: Int, res: dynamic) {
@@ -165,6 +179,15 @@ object Api {
         }
     }
 
+    private fun deleteSubmissionsFromDB(status: Int, callback: (err: Error?) -> Unit) {
+        try {
+            db.prepare("DELETE FROM submissions WHERE status=(?)").run(status)
+            callback(null)
+        } catch (e: Error) {
+            callback(e)
+        }
+    }
+
     private fun deleteSubmissionFromDB(id: Int, callback: (err: Error?) -> Unit) {
         try {
             db.prepare("DELETE FROM submissions WHERE id=(?)").run(id)
@@ -177,7 +200,7 @@ object Api {
     // To archive the status gets increased by 10
     private fun archiveSubmissionFromDB(id: Int, callback: (err: Error?) -> Unit) {
         try {
-            db.prepare("UPDATE submissions SET status=status+10 WHERE id=(?)").run(id)
+            db.prepare("UPDATE submissions SET status=status+$STATUS_ARCHIVE WHERE id=(?)").run(id)
             callback(null)
         } catch (e: Error) {
             callback(e)
@@ -187,7 +210,7 @@ object Api {
     // To unarchive the status gets decreased by 10
     private fun unarchiveSubmissionFromDB(id: Int, callback: (err: Error?) -> Unit) {
         try {
-            db.prepare("UPDATE submissions SET status=status-10 WHERE id=(?)").run(id)
+            db.prepare("UPDATE submissions SET status=status-$STATUS_ARCHIVE WHERE id=(?)").run(id)
             callback(null)
         } catch (e: Error) {
             callback(e)

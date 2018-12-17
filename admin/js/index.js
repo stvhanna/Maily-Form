@@ -36,7 +36,8 @@ const app = new Vue({
         deleteSubmission: deleteSubmission,
         archiveSubmission: archiveSubmission,
         unarchiveSubmission: unarchiveSubmission,
-        respond: respond
+        respond: respond,
+        deleteSubmissions: deleteSubmissions
     },
     components: {
         'hero': hero,
@@ -87,4 +88,9 @@ function respond(id, text) {
 function getSubmissions(selector) {
     axios.get(`/api/${selector}`).
         then(response => (app.submissions = response.data.result.submissions))
+}
+
+function deleteSubmissions(selector) {
+    axios.delete(`/api/${selector}`).
+        then(() => getSubmissions(router.currentRoute.params.selector))
 }
