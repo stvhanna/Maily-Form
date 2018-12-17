@@ -26,9 +26,7 @@
                 <br/>
             </section>
             <footer class="modal-card-foot">
-                <router-link class="button" :to="{ name: 'submissions', params: { selector: $route.params.selector }}">
-                    Close
-                </router-link>
+                <a class="button" @click="$router.go(-1)">Close</a>
                 <button class="button is-success"
                         @click="respond()"
                         v-if="(submission.response === null)">
