@@ -65,12 +65,13 @@ const vueApp = new Vue({
 });
 
 function checkLogin() {
-    if (localStorage.getItem("authToken") === null) {
+    let token = findToken();
+    if (token === null) {
         router.replace({path: '/login'});
     } else {
         axios.get(`/api/auth`, {
             headers: {
-                "Authorization": "Basic " + localStorage.getItem("authToken")
+                "Authorization": "Basic " + token
             }
         }).
             then(() => {
@@ -83,9 +84,19 @@ function checkLogin() {
     }
 }
 
+function findToken() {
+    let token = null;
+    if (sessionStorage.getItem("authToken") != null) {
+        token = sessionStorage.getItem("authToken");
+    } else {
+        token = localStorage.getItem("authToken");
+    }
+    return token;
+}
+
 function login() {
     axios.defaults.headers.common = {
-        "Authorization": "Basic " + localStorage.getItem("authToken")
+        "Authorization": "Basic " + findToken()
     };
     vueApp.loggedIn = true;
     getInfo();

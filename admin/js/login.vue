@@ -19,6 +19,11 @@
                                 <input v-model="password" class="input" type="password" placeholder="Password">
                             </div>
                         </div>
+                        <div class="field">
+                            <div class="control">
+                                <label class="checkbox"><input v-model="remember" type="checkbox"> Remember</label>
+                            </div>
+                        </div>
                         <button class="button is-block is-info is-fullwidth"
                                 @click="login()">
                             Login
@@ -40,7 +45,7 @@
                 let token = btoa(this.username + ":" + this.password);
                 axios.get(`/api/auth`, {headers: {'Authorization': "Basic " + token}}).
                     then(() => {
-                        localStorage.setItem("authToken", token);
+                        this.remember ? localStorage.setItem("authToken", token) : sessionStorage.setItem("authToken", token);
                         this.$root.login();
                         this.$router.replace({path: '/sent'});
                     }).
@@ -53,7 +58,8 @@
             return {
                 success: null,
                 username: "",
-                password: ""
+                password: "",
+                remember: false
             }
         }
     }
