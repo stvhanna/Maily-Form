@@ -5,19 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin</title>
+    <title>Administration</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 <div id="app">
-    <hero></hero>
-    <section class="section">
-        <div class="container">
-            <tabs></tabs>
-            <submissions :submissions="submissions"></submissions>
-        </div>
-    </section>
+    <router-view></router-view>
 </div>
 <script src="bundle.js"></script>
 </body>

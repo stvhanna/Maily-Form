@@ -2,9 +2,8 @@ import axios from 'axios';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import hero from './hero.vue';
-import submissions from './submissions.vue';
-import tabs from './tabs.vue';
+import app from './app.vue';
+import loginView from './login.vue';
 
 Vue.use(VueRouter);
 
@@ -12,56 +11,91 @@ const router = new VueRouter({
     routes: [
         {
             path: '*',
-            redirect: '/sent'
+            redirect: '/sent',
+            component: app
+        },
+        {
+            name: 'login',
+            path: '/login',
+            component: loginView
         },
         {
             name: 'submissions',
-            path: '/:selector'
+            path: '/:selector',
+            component: app
         },
         {
             name: 'modal',
-            path: '/:selector/:sid'
+            path: '/:selector/:sid',
+            component: app
         }
     ]
 });
 
-const app = new Vue({
+const vueApp = new Vue({
     router: router,
     el: '#app',
     data: {
-        info: {},
+        loggedIn: false,
+        info: {
+            title: "Administration"
+        },
         submissions: []
     },
     methods: {
+        login: login,
         deleteSubmission: deleteSubmission,
         archiveSubmission: archiveSubmission,
         unarchiveSubmission: unarchiveSubmission,
         respond: respond,
         deleteSubmissions: deleteSubmissions
     },
-    components: {
-        'hero': hero,
-        'tabs': tabs,
-        'submissions': submissions
-    },
     watch: {
         '$route'(to, from) {
-            if (from.params.selector !== to.params.selector) {
-                getSubmissions(to.params.selector)
+            if (this.loggedIn && from.params.selector !== to.params.selector) {
+                getSubmissions(to.params.selector);
+            } else if (!this.loggedIn && to.path !== "/login") {
+                router.replace({path: '/login'});
             }
         }
     },
     mounted() {
-        getInfo();
-        getSubmissions(router.currentRoute.params.selector)
+        checkLogin();
     }
 });
+
+function checkLogin() {
+    if (localStorage.getItem("authToken") === null) {
+        router.replace({path: '/login'});
+    } else {
+        axios.get(`/api/auth`, {
+            headers: {
+                "Authorization": "Basic " + localStorage.getItem("authToken")
+            }
+        }).
+            then(() => {
+                login();
+                getSubmissions(router.currentRoute.params.selector);
+            }).
+            catch(() => {
+                router.replace({path: '/login'});
+            });
+    }
+}
+
+function login() {
+    axios.defaults.headers.common = {
+        "Authorization": "Basic " + localStorage.getItem("authToken")
+    };
+    vueApp.loggedIn = true;
+    getInfo();
+}
 
 function getInfo() {
     axios.get(`/api/info`).
         then(response => {
-            app.info = response.data.result;
-            document.title = app.info.title;
+            vueApp.info = response.data.result;
+            document.title = vueApp.info.title;
         })
 }
 
@@ -87,7 +121,7 @@ function respond(id, text) {
 
 function getSubmissions(selector) {
     axios.get(`/api/${selector}`).
-        then(response => (app.submissions = response.data.result.submissions))
+        then(response => (vueApp.submissions = response.data.result.submissions))
 }
 
 function deleteSubmissions(selector) {

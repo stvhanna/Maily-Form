@@ -21,6 +21,9 @@ object Api {
     val router: dynamic = express.Router()
 
     init {
+        router.get("/auth") { _, res ->
+            auth(res)
+        }
         router.get("/info") { _, res ->
             info(res)
         }
@@ -51,6 +54,12 @@ object Api {
         router.post("/respond/:id") { req, res ->
             respondId((req.params.id as? String)?.toIntOrNull() ?: -1, (req.body?.text as? String) ?: "", res)
         }
+    }
+
+    private fun auth(res: dynamic) {
+        res.json(json(
+                "success" to true
+        ))
     }
 
     private fun info(res: dynamic) {

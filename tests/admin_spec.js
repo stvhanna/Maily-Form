@@ -8,19 +8,12 @@ const afterEach = mocha.afterEach;
 const it = mocha.it;
 
 const app = require('../app/index').jlelse.maily.Server.app;
-let port, server, url, authorizedOptions;
+let port, server, url;
 
 beforeEach((done) => {
     server = app.listen(0, () => {
         port = server.address().port;
         url = `http://localhost:${port}/admin/`;
-        authorizedOptions = {
-            url: url,
-            auth: {
-                user: 'admin',
-                pass: 'admin'
-            }
-        };
         done();
     });
 });
@@ -32,22 +25,15 @@ afterEach((done) => {
 describe('Admin pages', () => {
     describe('GET /', () => {
 
-        it('returns HTTP status code 401 when not authorized', (done) => {
-            request(url, (error, response) => {
-                assert.equal(response.statusCode, 401);
-                done();
-            });
-        });
-
         it('returns HTTP status code 200', (done) => {
-            request(authorizedOptions, (error, response) => {
+            request(url, (error, response) => {
                 assert.equal(response.statusCode, 200);
                 done();
             });
         });
 
         it('returns HTML content', (done) => {
-            request(authorizedOptions, (error, response, body) => {
+            request(url, (error, response, body) => {
                 assert.include(body, 'html');
                 assert.include(body, 'body');
                 done();
