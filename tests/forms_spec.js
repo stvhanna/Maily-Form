@@ -51,7 +51,7 @@ describe('Forms API', () => {
             withSmtpServer({
                 onMessage: (mailObject) => {
                     messageCounter += 1;
-                    assert.equal(mailObject.headers['reply-to'], formData._replyTo);
+                    assert.equal(mailObject.replyTo.text, formData._replyTo);
                 },
                 onListen: () => {
                     request.post({ url, formData });

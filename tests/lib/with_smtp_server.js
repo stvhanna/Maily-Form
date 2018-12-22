@@ -1,10 +1,9 @@
 const config = require('../../app/index').jlelse.maily.lib.Config;
 const SMTPServer = require('smtp-server').SMTPServer;
-const MailParser = require('mailparser-mit').MailParser;
+const MailParser = require('mailparser').simpleParser;
 
 function withSmtpServer(callbackObj) {
     let listenTimeout = 1000;
-    let mailparser = new MailParser();
 
     let closing = false;
     function onListen () {
@@ -33,12 +32,11 @@ function withSmtpServer(callbackObj) {
         socketTimeout: 1000,
         closeTimeout: 1000,
         onData(stream, session, callback) {
-            mailparser.on('end', (mailObject) => {
-                onMessage(mailObject);
+            MailParser(stream).then(email => {
+                onMessage(email);
+                callback();
                 server.close(onClose);
             });
-            stream.pipe(mailparser);
-            return callback();
         }
     });
 
