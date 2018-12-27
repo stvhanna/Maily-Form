@@ -1,7 +1,7 @@
 
 # Maily Form
 
-[![CircleCI](https://circleci.com/gh/jlelse/Maily-Form.svg?style=svg)](https://circleci.com/gh/jlelse/Maily-Form) ![Docker Pulls](https://img.shields.io/docker/pulls/jlelse/maily-form.svg)
+![Docker Pulls](https://img.shields.io/docker/pulls/jlelse/maily-form.svg)
 
 *Available on [DockerHub](https://hub.docker.com/r/jlelse/maily-form/)*
 

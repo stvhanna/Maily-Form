@@ -1,11 +1,11 @@
 workflow "Build develop" {
   on = "push"
-  resolves = ["Push develop"]
+  resolves = ["Push develop", "Build"]
 }
 
 workflow "Build master" {
   on = "push"
-  resolves = ["Push master"]
+  resolves = ["Push master", "Build"]
 }
 
 workflow "Build other branches" {
@@ -26,13 +26,12 @@ action "Login" {
 # Only on develop
 action "Filter develop" {
   uses = "actions/bin/filter@master"
-  needs = "Build"
   args = "branch develop"
 }
 
 action "Tag develop" {
   uses = "actions/docker/cli@master"
-  needs = "Filter develop"
+  needs = ["Filter develop", "Build"]
   args = "tag maily-form jlelse/maily-form:develop"
 }
 
@@ -45,13 +44,12 @@ action "Push develop" {
 # Only on master
 action "Filter master" {
   uses = "actions/bin/filter@master"
-  needs = "Build"
   args = "branch master"
 }
 
 action "Tag master" {
   uses = "actions/docker/cli@master"
-  needs = "Filter master"
+  needs = ["Filter master", "Build"]
   args = "tag maily-form jlelse/maily-form:latest"
 }
 
