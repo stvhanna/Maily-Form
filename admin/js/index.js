@@ -5,6 +5,9 @@ import VueRouter from 'vue-router';
 import app from './app.vue';
 import loginView from './login.vue';
 
+// Styles
+import './styles.scss';
+
 Vue.use(VueRouter);
 
 const router = new VueRouter({

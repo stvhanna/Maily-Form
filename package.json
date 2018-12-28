@@ -4,9 +4,11 @@
   "description": "Forms to Email",
   "main": "app/index.js",
   "scripts": {
-    "build": "./gradlew build && npm run build --prefix admin",
     "start": "NODE_ENV=production node app/index.js",
     "test": "NODE_ENV=test mocha --exit tests/**/*_spec.js",
+    "build": "run-p build-kotlin build-admin",
+    "build-admin": "npm run build --prefix admin",
+    "build-kotlin": "./gradlew build",
     "dev": "npm-run-all build --parallel -r dev-kotlin dev-admin dev-run",
     "dev-run": "NODE_ENV=production nodemon app/index.js",
     "dev-admin": "npm run dev --prefix admin",
