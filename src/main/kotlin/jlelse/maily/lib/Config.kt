@@ -36,7 +36,7 @@ object Config {
     var port: Int = 8080
 
     init {
-        if (nodeEnv == "production") {
+        if (nodeEnv == "production" || nodeEnv == "development") {
             adminUsername = process.env.ADMIN_USER as? String ?: adminUsername
             adminPassword = process.env.ADMIN_PASS as? String ?: adminPassword
             adminRealm = process.env.ADMIN_REALM as? String ?: adminRealm
@@ -57,7 +57,7 @@ object Config {
             corsHeader = process.env.CORS_HEADER as? String ?: corsHeader
             host = process.env.HOST as? String ?: host
             port = (process.env.PORT as? String)?.toIntOrNull() ?: port
-        } else {
+        } else { // Test
             database = "data/submissions-test.db"
             adminUsername = "admin"
             adminPassword = "admin"

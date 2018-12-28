@@ -10,7 +10,7 @@
     "build-admin": "npm run build --prefix admin",
     "build-kotlin": "./gradlew build",
     "dev": "npm-run-all build --parallel -r dev-kotlin dev-admin dev-run",
-    "dev-run": "NODE_ENV=production nodemon app/index.js",
+    "dev-run": "NODE_ENV=development nodemon app/index.js",
     "dev-admin": "npm run dev --prefix admin",
     "dev-kotlin": "./gradlew -t build"
   },
