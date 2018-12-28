@@ -1,14 +1,13 @@
 'use strict';
 
-const path = require('path');
-const VueLoaderPlugin = require("vue-loader").VueLoaderPlugin;
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    entry: './js/index.js',
+    entry: './src/index.js',
     mode: 'production',
     output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        filename: '[contenthash].bundle.js'
     },
     resolve: {
         alias: {
@@ -41,6 +40,9 @@ module.exports = {
         ]
     },
     plugins: [
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        new HtmlWebpackPlugin({
+            template: './src/index.html'
+        })
     ]
 };
