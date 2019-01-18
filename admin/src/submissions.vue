@@ -1,5 +1,11 @@
 <template>
     <div>
+        <div v-if="($route.params.selector === 'sent')" class="buttons">
+            <a class="button is-warning is-fullwidth"
+               @click="$root.archiveSubmissions($route.params.selector)">
+                Archive all
+            </a>
+        </div>
         <div v-if="($route.params.selector === 'spam')" class="buttons">
             <a class="button is-danger is-fullwidth"
                @click="$root.deleteSubmissions($route.params.selector)">

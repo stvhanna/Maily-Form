@@ -48,11 +48,12 @@ const vueApp = new Vue({
     methods: {
         login: login,
         logout: logout,
+        deleteSubmissions: deleteSubmissions,
         deleteSubmission: deleteSubmission,
+        archiveSubmissions: archiveSubmissions,
         archiveSubmission: archiveSubmission,
         unarchiveSubmission: unarchiveSubmission,
-        respond: respond,
-        deleteSubmissions: deleteSubmissions
+        respond: respond
     },
     watch: {
         '$route'(to, from) {
@@ -124,9 +125,25 @@ function getInfo() {
         })
 }
 
+function getSubmissions(selector) {
+    if(selector === null) selector = router.currentRoute.params.selector;
+    axios.get(`/api/get/selector/${selector}`).
+    then(response => (vueApp.submissions = response.data.result.submissions))
+}
+
+function deleteSubmissions(selector) {
+    axios.post(`/api/delete/selector/${selector}`).
+    then(() => getSubmissions(router.currentRoute.params.selector))
+}
+
 function deleteSubmission(id) {
     axios.post(`/api/delete/id/${id}`).
         then(() => getSubmissions(router.currentRoute.params.selector))
+}
+
+function archiveSubmissions(selector) {
+    axios.post(`/api/archive/selector/${selector}`).
+    then(() => getSubmissions(router.currentRoute.params.selector))
 }
 
 function archiveSubmission(id) {
@@ -141,15 +158,5 @@ function unarchiveSubmission(id) {
 
 function respond(id, text) {
     axios.post(`/api/respond/id/${id}`, {text: text}).
-        then(() => getSubmissions(router.currentRoute.params.selector))
-}
-
-function getSubmissions(selector) {
-    axios.get(`/api/get/selector/${selector}`).
-        then(response => (vueApp.submissions = response.data.result.submissions))
-}
-
-function deleteSubmissions(selector) {
-    axios.post(`/api/delete/selector/${selector}`).
         then(() => getSubmissions(router.currentRoute.params.selector))
 }
