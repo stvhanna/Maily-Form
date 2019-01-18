@@ -90,10 +90,10 @@ function checkLogin() {
 
 function findToken() {
     let token = null;
-    if (sessionStorage.getItem("authToken") != null) {
-        token = sessionStorage.getItem("authToken");
+    if (window.sessionStorage.getItem("authToken") != null) {
+        token = window.sessionStorage.getItem("authToken");
     } else {
-        token = localStorage.getItem("authToken");
+        token = window.localStorage.getItem("authToken");
     }
     return token;
 }
@@ -107,8 +107,8 @@ function login() {
 }
 
 function logout() {
-    sessionStorage.removeItem("authToken");
-    localStorage.removeItem("authToken");
+    window.sessionStorage.removeItem("authToken");
+    window.localStorage.removeItem("authToken");
     axios.defaults.headers.common = {
         "Authorization": ""
     };
