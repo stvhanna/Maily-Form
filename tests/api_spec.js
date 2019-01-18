@@ -13,7 +13,7 @@ let port, server, url, authorizedOptions, spamOptions;
 beforeEach((done) => {
     server = app.listen(0, () => {
         port = server.address().port;
-        url = `http://localhost:${port}/api/sent`;
+        url = `http://localhost:${port}/api/get/selector/sent`;
         authorizedOptions = {
             url: url,
             auth: {
@@ -22,7 +22,7 @@ beforeEach((done) => {
             }
         };
         spamOptions = {
-            url: `http://localhost:${port}/api/spam`,
+            url: `http://localhost:${port}/api/get/selector/spam`,
             auth: {
                 user: 'admin',
                 pass: 'admin'
@@ -37,7 +37,7 @@ afterEach((done) => {
 });
 
 describe('API', () => {
-    describe('GET /sent', () => {
+    describe('GET /get/selector/sent', () => {
 
         it('returns HTTP status code 401 when not authorized', (done) => {
             request(url, (error, response) => {
@@ -61,7 +61,7 @@ describe('API', () => {
         });
     });
 
-    describe('GET /spam', () => {
+    describe('GET /get/selector/spam', () => {
 
         it('returns JSON content', (done) => {
             request(spamOptions, (error, response, body) => {

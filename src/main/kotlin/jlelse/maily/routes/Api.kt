@@ -21,37 +21,59 @@ object Api {
     val router: dynamic = express.Router()
 
     init {
+        // Authentication
         router.get("/auth") { _, res ->
             auth(res)
         }
+        // Info
         router.get("/info") { _, res ->
             info(res)
         }
-        router.get("/sent") { _, res ->
+        // Get submissions
+        router.get("/get/selector/sent") { _, res ->
             get(STATUS_SENT, res)
         }
-        router.get("/spam") { _, res ->
+        router.get("/get/selector/spam") { _, res ->
             get(STATUS_SPAM, res)
         }
-        router.get("/archive") { _, res ->
+        router.get("/get/selector/archive") { _, res ->
             get(STATUS_ARCHIVE, res, ">")
         }
-        router.get("/:id") { req, res ->
+        router.get("/get/id/:id") { req, res ->
             getId((req.params.id as? String)?.toIntOrNull() ?: -1, res)
         }
-        router.delete("/spam") { _, res ->
+        // Delete submissions
+        router.post("/delete/selector/sent") { _, res ->
+            del(STATUS_SENT, res)
+        }
+        router.post("/delete/selector/spam") { _, res ->
             del(STATUS_SPAM, res)
         }
-        router.delete("/:id") { req, res ->
+        router.post("/delete/selector/archive") { _, res ->
+            del(STATUS_ARCHIVE, res, ">")
+        }
+        router.post("/delete/id/:id") { req, res ->
             delId((req.params.id as? String)?.toIntOrNull() ?: -1, res)
         }
-        router.post("/archive/:id") { req, res ->
+        // Archive submissions
+        // Only possible for selectors sent and spam or id
+        router.post("/archive/selector/sent") { _, res ->
+            archive(STATUS_SENT, res)
+        }
+        router.post("/archive/selector/spam") { _, res ->
+            archive(STATUS_SPAM, res)
+        }
+        router.post("/archive/id/:id") { req, res ->
             archiveId((req.params.id as? String)?.toIntOrNull() ?: -1, res)
         }
-        router.delete("/archive/:id") { req, res ->
+        // Unarchive submissions
+        // Only possible for id
+        router.post("/unarchive/id/:id") { req, res ->
             unarchiveId((req.params.id as? String)?.toIntOrNull() ?: -1, res)
         }
-        router.post("/respond/:id") { req, res ->
+        // Respond to submission
+        // Only possible for id
+        router.post("/respond/id/:id") { req, res ->
             respondId((req.params.id as? String)?.toIntOrNull() ?: -1, (req.body?.text as? String) ?: "", res)
         }
     }
@@ -113,8 +135,8 @@ object Api {
         )
     }
 
-    private fun del(status: Int, res: dynamic) {
-        deleteSubmissionsFromDB(status) { err ->
+    private fun del(status: Int, res: dynamic, statusComparator: String = "=") {
+        deleteSubmissionsFromDB(status, statusComparator) { err ->
             if (err != null) console.log(err.message)
             res.json(json("success" to (err == null))) as? Unit
         }
@@ -122,6 +144,13 @@ object Api {
 
     private fun delId(id: Int, res: dynamic) {
         deleteSubmissionFromDB(id) { err ->
+            if (err != null) console.log(err.message)
+            res.json(json("success" to (err == null))) as? Unit
+        }
+    }
+
+    private fun archive(status: Int, res: dynamic, statusComparator: String = "=") {
+        archiveSubmissionsFromDB(status, statusComparator) { err ->
             if (err != null) console.log(err.message)
             res.json(json("success" to (err == null))) as? Unit
         }
@@ -188,9 +217,9 @@ object Api {
         }
     }
 
-    private fun deleteSubmissionsFromDB(status: Int, callback: (err: Error?) -> Unit) {
+    private fun deleteSubmissionsFromDB(status: Int, statusComparator: String, callback: (err: Error?) -> Unit) {
         try {
-            db.prepare("DELETE FROM submissions WHERE status=(?)").run(status)
+            db.prepare("DELETE FROM submissions WHERE status $statusComparator (?)").run(status)
             callback(null)
         } catch (e: Error) {
             callback(e)
@@ -207,6 +236,15 @@ object Api {
     }
 
     // To archive the status gets increased by 10
+    private fun archiveSubmissionsFromDB(status: Int, statusComparator: String, callback: (err: Error?) -> Unit) {
+        try {
+            db.prepare("UPDATE submissions SET status=status+$STATUS_ARCHIVE WHERE status $statusComparator (?)").run(status)
+            callback(null)
+        } catch (e: Error) {
+            callback(e)
+        }
+    }
+
     private fun archiveSubmissionFromDB(id: Int, callback: (err: Error?) -> Unit) {
         try {
             db.prepare("UPDATE submissions SET status=status+$STATUS_ARCHIVE WHERE id=(?)").run(id)

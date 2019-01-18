@@ -125,31 +125,31 @@ function getInfo() {
 }
 
 function deleteSubmission(id) {
-    axios.delete(`/api/${id}`).
+    axios.post(`/api/delete/id/${id}`).
         then(() => getSubmissions(router.currentRoute.params.selector))
 }
 
 function archiveSubmission(id) {
-    axios.post(`/api/archive/${id}`).
+    axios.post(`/api/archive/id/${id}`).
         then(() => getSubmissions(router.currentRoute.params.selector))
 }
 
 function unarchiveSubmission(id) {
-    axios.delete(`/api/archive/${id}`).
+    axios.post(`/api/unarchive/id/${id}`).
         then(() => getSubmissions(router.currentRoute.params.selector))
 }
 
 function respond(id, text) {
-    axios.post(`/api/respond/${id}`, {text: text}).
+    axios.post(`/api/respond/id/${id}`, {text: text}).
         then(() => getSubmissions(router.currentRoute.params.selector))
 }
 
 function getSubmissions(selector) {
-    axios.get(`/api/${selector}`).
+    axios.get(`/api/get/selector/${selector}`).
         then(response => (vueApp.submissions = response.data.result.submissions))
 }
 
 function deleteSubmissions(selector) {
-    axios.delete(`/api/${selector}`).
+    axios.post(`/api/delete/selector/${selector}`).
         then(() => getSubmissions(router.currentRoute.params.selector))
 }
