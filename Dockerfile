@@ -23,6 +23,7 @@ WORKDIR /app
 RUN npm ci && npm ci --prefix admin && npm cache clean --force
 RUN npm run build
 RUN mkdir data && npm test
+RUN npm prune --production
 
 #
 # STAGE 2
@@ -42,7 +43,7 @@ COPY --from=build /app/package-lock.json /app/package-lock.json
 COPY --from=build /app/node_modules /app/node_modules
 
 WORKDIR /app
-RUN mkdir data && npm prune
+RUN mkdir data
 VOLUME ["/app/data"]
 
 EXPOSE 8080
