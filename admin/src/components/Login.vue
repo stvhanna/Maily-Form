@@ -35,32 +35,27 @@
     </section>
 </template>
 
-<script>
-    import axios from 'axios';
+<script lang="ts">
+import axios from 'axios';
+import {Component, Vue} from 'vue-property-decorator';
+import {login} from '@/main';
 
-    export default {
-        name: 'login',
-        methods: {
-            login: function () {
-                let token = btoa(this.username + ":" + this.password);
-                axios.get(`/api/auth`, {headers: {'Authorization': "Basic " + token}}).
-                    then(() => {
-                        this.remember ? localStorage.setItem("authToken", token) : sessionStorage.setItem("authToken", token);
-                        this.$root.login();
-                        this.$router.replace({path: '/sent'});
-                    }).
-                    catch(() => {
-                        this.success = false;
-                    });
-            }
-        },
-        data() {
-            return {
-                success: null,
-                username: "",
-                password: "",
-                remember: false
-            }
-        }
+@Component
+export default class Login extends Vue {
+    public success: boolean | null = null;
+    public username: string = '';
+    public password: string = '';
+    public remember: boolean = false;
+
+    public login() {
+        const token = btoa(this.username + ':' + this.password);
+        axios.get(`/api/auth`, {headers: {Authorization: 'Basic ' + token}}).then(() => {
+            this.remember ? localStorage.setItem('authToken', token) : sessionStorage.setItem('authToken', token);
+            login();
+            this.$router.replace({path: '/sent'});
+        }).catch(() => {
+            this.success = false;
+        });
     }
+}
 </script>

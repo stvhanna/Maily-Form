@@ -2,31 +2,30 @@
   "name": "maily-form-admin",
   "version": "1.0.0",
   "description": "Admin interface for Maily-Form",
+  "private": true,
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/jlelse/Maily-Form.git"
   },
   "scripts": {
-    "build": "run-p js-build",
-    "js-build": "webpack",
-    "dev": "run-p -r js-dev",
-    "js-dev": "webpack --watch"
+    "dev": "vue-cli-service build --mode development --watch",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "devDependencies": {
+    "@vue/cli-plugin-babel": "3.3.0",
+    "@vue/cli-plugin-typescript": "3.3.0",
+    "@vue/cli-service": "3.3.1",
     "axios": "0.18.0",
     "bulma": "0.7.2",
-    "css-loader": "2.1.0",
-    "html-webpack-plugin": "3.2.0",
-    "npm-run-all": "4.1.5",
     "sass": "1.16.1",
     "sass-loader": "7.1.0",
-    "style-loader": "0.23.1",
+    "typescript": "3.2.4",
     "vue": "2.5.22",
-    "vue-loader": "15.6.1",
+    "vue-class-component": "6.3.2",
+    "vue-property-decorator": "7.3.0",
     "vue-router": "3.0.2",
-    "vue-template-compiler": "2.5.22",
-    "webpack": "4.29.0",
-    "webpack-cli": "3.2.1"
+    "vue-template-compiler": "2.5.22"
   }
 }

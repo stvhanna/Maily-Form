@@ -19,7 +19,7 @@
                                 <div class="field is-grouped">
                                     <p class="control">
                                         <a class="button is-danger"
-                                           @click="logout()">Logout</a>
+                                           @click="$root.logout()">Logout</a>
                                     </p>
                                 </div>
                             </div>
@@ -37,23 +37,13 @@
     </section>
 </template>
 
-<script>
-    export default {
-        name: 'hero',
-        props: {
-            title: {
-                required: true
-            }
-        },
-        data() {
-            return {
-                showNav: false
-            }
-        },
-        methods: {
-            logout: function () {
-                this.$root.logout();
-            }
-        }
-    }
+<script lang="ts">
+import {Component, Prop, Vue} from 'vue-property-decorator';
+
+@Component
+export default class Hero extends Vue {
+    public showNav: boolean = false;
+
+    @Prop(String) public title!: string;
+}
 </script>

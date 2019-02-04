@@ -25,7 +25,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr is="submission"
+                <tr is="Submission"
                     v-for="submission in submissions"
                     :key="submission.id"
                     :submission="submission"></tr>
@@ -35,19 +35,16 @@
     </div>
 </template>
 
-<script>
-    import submission from './submission.vue'
+<script lang="ts">
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import Submission from '@/components/Submission.vue';
 
-    export default {
-        name: 'submissions',
-        props: {
-            submissions: {
-                type: Array,
-                required: true
-            }
-        },
-        components: {
-            submission
-        }
-    }
+@Component({
+    components: {
+        Submission,
+    },
+})
+export default class Submissions extends Vue {
+    @Prop(Array) public submissions!: any[];
+}
 </script>

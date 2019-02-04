@@ -32,7 +32,7 @@
                         Close
                     </a>
                     <a class="button is-success"
-                       @click="respond()"
+                       @click="$root.respond(submission.id, tempResponse)"
                        v-if="(submission.response === null)">
                         Send response
                     </a>
@@ -56,26 +56,14 @@
     </div>
 </template>
 
-<script>
-    function respond() {
-        this.$root.respond(this.submission.id, this.tempResponse);
-    }
+<script lang="ts">
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import {SubmissionModel} from '@/models/submissionModel';
 
-    export default {
-        name: "modal",
-        props: {
-            submission: {
-                type: Object,
-                required: true
-            }
-        },
-        data() {
-            return {
-                tempResponse: ""
-            }
-        },
-        methods: {
-            respond: respond
-        }
-    }
+@Component
+export default class Modal extends Vue {
+    public tempResponse: string = '';
+
+    @Prop() public submission!: SubmissionModel;
+}
 </script>
