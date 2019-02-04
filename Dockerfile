@@ -2,13 +2,19 @@
 # STAGE 1
 # - Install and build necessary dependencies
 #
-FROM node:10.15.0-alpine as build
+FROM node:10.15.1-alpine as build
 RUN echo -e "http://ftp.halifax.rwth-aachen.de/alpine/v3.8/main/\nhttp://ftp.halifax.rwth-aachen.de/alpine/v3.8/community/" > /etc/apk/repositories && \
     apk add --no-cache python build-base openjdk8
+COPY admin/public /app/admin/public
 COPY admin/src /app/admin/src
+COPY admin/.browserslistrc /app/admin/.browserslistrc
+COPY admin/babel.config.js /app/admin/babel.config.js
 COPY admin/package.json /app/admin/package.json
 COPY admin/package-lock.json /app/admin/package-lock.json
-COPY admin/webpack.config.js /app/admin/webpack.config.js
+COPY admin/postcss.config.js /app/admin/postcss.config.js
+COPY admin/tsconfig.json /app/admin/tsconfig.json
+COPY admin/tslint.json /app/admin/tslint.json
+COPY admin/vue.config.js /app/admin/vue.config.js
 COPY gradle /app/gradle
 COPY public /app/public
 COPY src /app/src
@@ -29,7 +35,7 @@ RUN npm prune --production
 # STAGE 2
 # - Keep Only runtime libraries: no build tool is allowed in production.
 #
-FROM node:10.15.0-alpine
+FROM node:10.15.1-alpine
 LABEL maintainer="Jan-Lukas Else (https://about.jlelse.de)"
 
 ENV NODE_ENV=production
