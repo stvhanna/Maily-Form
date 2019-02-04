@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "3.3.0",
-    "@vue/cli-plugin-typescript": "3.3.0",
+    "@vue/cli-plugin-typescript": "3.4.0",
     "@vue/cli-service": "3.4.0",
     "axios": "0.18.0",
     "bulma": "0.7.2",
