@@ -10,7 +10,7 @@ workflow "Build master" {
 
 workflow "Build other branches" {
   on = "push"
-  resolves = ["Build"]
+  resolves = ["Filter not master", "Filter not develop", "Build"]
 }
 
 action "Build" {
@@ -57,4 +57,15 @@ action "Push master" {
   uses = "actions/docker/cli@master"
   needs = ["Login", "Tag master"]
   args = "push jlelse/maily-form:latest"
+}
+
+# Only on branches not master or develop
+action "Filter not master" {
+  uses = "actions/bin/filter@master"
+  args = "not branch master"
+}
+
+action "Filter not develop" {
+  uses = "actions/bin/filter@master"
+  args = "not branch develop"
 }
