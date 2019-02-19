@@ -11,7 +11,7 @@ object Server {
     private val errorHandler = require("errorhandler")
     private val auth = require("http-auth")
 
-    val app = express()
+    val app: dynamic = express()
 
     init {
         if (Config.nodeEnv == "development") {
