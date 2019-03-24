@@ -1,16 +1,16 @@
 workflow "Build develop" {
   on = "push"
-  resolves = ["Push develop", "Build"]
+  resolves = ["Push develop"]
 }
 
 workflow "Build master" {
   on = "push"
-  resolves = ["Push master", "Build"]
+  resolves = ["Push master"]
 }
 
 workflow "Build other branches" {
   on = "push"
-  resolves = ["Filter not master", "Filter not develop", "Build"]
+  resolves = ["Tag not master or develop"]
 }
 
 action "Build" {
@@ -68,4 +68,10 @@ action "Filter not master" {
 action "Filter not develop" {
   uses = "actions/bin/filter@master"
   args = "not branch develop"
+}
+
+action "Tag not master or develop" {
+  uses = "actions/docker/cli@master"
+  needs = ["Filter not develop", "Filter not master", "Build"]
+  args = "tag maily-form jlelse/maily-form:neither"
 }
