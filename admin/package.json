@@ -14,7 +14,7 @@
     "lint": "vue-cli-service lint"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "3.5.1",
+    "@vue/cli-plugin-babel": "3.5.3",
     "@vue/cli-plugin-typescript": "3.5.3",
     "@vue/cli-service": "3.5.3",
     "axios": "0.18.0",
