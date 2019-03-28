@@ -3,7 +3,7 @@
 # - Install and build necessary dependencies
 #
 FROM node:10.15.3-alpine as build
-RUN apk upgrade --no-cache && apk add --no-cache python build-base openjdk8
+RUN apk upgrade --no-cache && apk add --no-cache python build-base openjdk8 nss
 COPY admin/public /app/admin/public
 COPY admin/src /app/admin/src
 COPY admin/.browserslistrc /app/admin/.browserslistrc
