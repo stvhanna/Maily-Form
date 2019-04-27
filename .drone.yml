@@ -25,32 +25,6 @@ trigger:
 
 ---
 kind: pipeline
-name: build-master-arm64
-
-platform:
-  os: linux
-  arch: arm64
-
-steps:
-  - name: publish
-    image: plugins/docker
-    settings:
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-      repo: jlelse/maily-form
-      tags: linux-arm64
-    when:
-      event:
-      - push
-
-trigger:
-  ref:
-  - refs/heads/master
-
----
-kind: pipeline
 name: manifest-master
 
 platform:
@@ -75,7 +49,6 @@ trigger:
 
 depends_on:
 - build-master-amd64
-- build-master-arm64
 
 ---
 kind: pipeline
@@ -95,32 +68,6 @@ steps:
         from_secret: docker_password
       repo: jlelse/maily-form
       tags: develop-linux-amd64
-    when:
-      event:
-      - push
-
-trigger:
-  ref:
-  - refs/heads/develop
-
----
-kind: pipeline
-name: build-develop-arm64
-
-platform:
-  os: linux
-  arch: arm64
-
-steps:
-  - name: publish
-    image: plugins/docker
-    settings:
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-      repo: jlelse/maily-form
-      tags: develop-linux-arm64
     when:
       event:
       - push
@@ -155,7 +102,6 @@ trigger:
 
 depends_on:
 - build-develop-amd64
-- build-develop-arm64
 
 ---
 kind: pipeline
