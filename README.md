@@ -95,7 +95,7 @@ services:
 
 ## Authors 
 
-* Original source code [jlelse](https://about.jlelse.de) mainly for own purposes.
+* Original source code [jlelse](https://jlelse.dev) mainly for own purposes.
 * Contributors:
     * [glenux](https://glenux.net) made it ready for production at [boldcode.io](https://boldcode.io)
 

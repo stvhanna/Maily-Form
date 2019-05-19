@@ -35,7 +35,7 @@ RUN npm prune --production
 # - Keep Only runtime libraries: no build tool is allowed in production.
 #
 FROM node:10-alpine
-LABEL maintainer="Jan-Lukas Else (https://about.jlelse.de)"
+LABEL maintainer="Jan-Lukas Else (https://jlelse.dev)"
 
 ENV NODE_ENV=production
 

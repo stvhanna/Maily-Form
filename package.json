@@ -14,7 +14,7 @@
     "dev-admin": "npm run dev --prefix admin",
     "dev-kotlin": "./gradlew -t build"
   },
-  "author": "Jan-Lukas Else (https://about.jlelse.de/)",
+  "author": "Jan-Lukas Else (https://jlelse.dev/)",
   "homepage": "https://github.com/jlelse/Maily-Form",
   "license": "GPL-3.0",
   "repository": {
