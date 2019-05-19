@@ -24,7 +24,7 @@
   "dependencies": {
     "better-sqlite3": "5.4.0",
     "cors": "2.8.5",
-    "errorhandler": "1.5.0",
+    "errorhandler": "1.5.1",
     "express": "4.16.4",
     "formidable": "1.2.1",
     "http-auth": "3.2.3",
