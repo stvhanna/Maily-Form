@@ -2,7 +2,7 @@
 # STAGE 1
 # - Install and build necessary dependencies
 #
-FROM node:10-alpine as build
+FROM node:12-alpine as build
 RUN apk upgrade --no-cache && apk add --no-cache python build-base openjdk8 nss
 COPY admin/public /app/admin/public
 COPY admin/src /app/admin/src
@@ -34,7 +34,7 @@ RUN npm prune --production
 # STAGE 2
 # - Keep Only runtime libraries: no build tool is allowed in production.
 #
-FROM node:10-alpine
+FROM node:12-alpine
 LABEL maintainer="Jan-Lukas Else (https://jlelse.dev)"
 
 ENV NODE_ENV=production
