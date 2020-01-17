@@ -22,7 +22,7 @@
     "fibers": "4.0.2",
     "sass": "1.23.7",
     "sass-loader": "8.0.0",
-    "typescript": "3.7.2",
+    "typescript": "3.7.5",
     "vue": "2.6.10",
     "vue-class-component": "7.1.0",
     "vue-property-decorator": "8.3.0",
